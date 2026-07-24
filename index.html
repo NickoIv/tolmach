@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#143830">
+<title>Толмач — голосовой переводчик: русский, английский, китайский, вьетнамский, тайский, казахский</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F2420; --pine:#143830; --paper:#F1F5F2; --card:#FFFFFF;
+  --teal:#0FA383; --teal-soft:#E2F4EE; --gold:#F2B33D; --gold-soft:#FCEFD4;
+  --line:rgba(15,36,32,.10); --mut:#5C6F69; --red:#D64545;
+  --tx:#0F2420; --ph:#A9BAB3; --fs:1;
+}
+html[data-font="s"]{--fs:.88}
+html[data-font="l"]{--fs:1.16}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0;}
+body{
+  font-family:'Golos Text',system-ui,sans-serif; color:var(--tx);
+  background:linear-gradient(165deg,#F3F7F4 0%,#EAF1ED 55%,#F4F1E7 100%);
+  min-height:100vh; min-height:100dvh; overflow-x:hidden;
+}
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(60% 45% at 8% 0%, rgba(15,163,131,.10), transparent 70%),
+    radial-gradient(55% 40% at 100% 100%, rgba(242,179,61,.12), transparent 70%);
+}
+/* ---------- ТЁМНАЯ ТЕМА ---------- */
+[data-theme="dark"]{
+  --paper:#0B1714; --card:#142A24; --line:rgba(255,255,255,.09);
+  --mut:#8CA39A; --tx:#E9F3EE; --ph:#6B8279;
+  --teal:#2EC7A4; --teal-soft:rgba(46,199,164,.13);
+  --gold:#F6C463; --gold-soft:rgba(246,196,99,.13);
+  --red:#F07575;
+}
+[data-theme="dark"] body{background:linear-gradient(165deg,#0C1915 0%,#0A1411 55%,#0E1811 100%);}
+[data-theme="dark"] .card{box-shadow:0 10px 24px rgba(0,0,0,.35);}
+[data-theme="dark"] .result-card{background:linear-gradient(180deg,#142A24,#122621);}
+[data-theme="dark"] .result-card.gold{background:linear-gradient(180deg,#142A24,#1B2A1E);}
+[data-theme="dark"] .live-area{background:#10231E;}
+[data-theme="dark"] .icon-btn,[data-theme="dark"] .chip{background:#1A332C;}
+[data-theme="dark"] .v-entry{background:#17302A;}
+[data-theme="dark"] .hist-item{background:#142A24;}
+[data-theme="dark"] .sheet{background:#16302A; box-shadow:0 -18px 50px rgba(0,0,0,.6);}
+[data-theme="dark"] .sheet-close,[data-theme="dark"] .seg,[data-theme="dark"] .set-author{background:#10231E;}
+[data-theme="dark"] .sheet-handle{background:#2E4A41;}
+[data-theme="dark"] .kbd-done{background:#0A1512; box-shadow:0 12px 28px rgba(0,0,0,.6);}
+[data-theme="dark"] .bar{background:#1E3831;}
+[data-theme="dark"] .mic{box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 16px 32px rgba(0,0,0,.55);}
+[data-theme="dark"] .tabs{box-shadow:0 8px 20px rgba(0,0,0,.3);}
+[data-theme="dark"] .top{box-shadow:0 18px 40px rgba(0,0,0,.45);}
+[data-theme="dark"] .sel-pop{box-shadow:0 18px 44px rgba(0,0,0,.55);}
+[data-theme="dark"] .secwarn{background:linear-gradient(150deg,#3a2a10,#2a1d0a); border-color:rgba(246,196,99,.4);}
+/* ---------- каркас ---------- */
+.app{position:relative; z-index:1; max-width:460px; margin:0 auto; padding:14px 14px 44px;}
+/* ---------- шапка ---------- */
+.top{
+  background:linear-gradient(150deg,#1A4038,#0E241F); border-radius:22px;
+  padding:16px; color:#fff; position:relative; overflow:hidden;
+  box-shadow:0 18px 40px rgba(15,36,32,.28);
+}
+.top::before{
+  content:'语言 تىل'; position:absolute; right:-10px; top:-24px; font-weight:800; font-size:80px;
+  color:rgba(255,255,255,.045); transform:rotate(8deg); pointer-events:none; white-space:nowrap;
+}
+.brand{display:flex; align-items:center; gap:12px; position:relative;}
+.logo{
+  width:46px; height:46px; border-radius:13px; background:var(--gold); color:var(--ink);
+  display:grid; place-items:center; flex:0 0 auto;
+  box-shadow:0 6px 14px rgba(0,0,0,.3), inset 0 -3px 0 rgba(0,0,0,.15);
+}
+.name{font-family:'Unbounded'; font-weight:800; font-size:24px; letter-spacing:.06em;}
+.tag{font-size:11.5px; color:#AFC9BF; letter-spacing:.05em; margin-top:2px;}
+.net{
+  margin-left:auto; display:flex; align-items:center; gap:6px; font-size:11px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  padding:5px 10px; border-radius:999px; color:#D8E7E0;
+}
+.gear{
+  width:34px; height:34px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.08); color:#D8E7E0; display:grid; place-items:center;
+  cursor:pointer; transition:background .25s, transform .15s; margin-left:8px; flex:0 0 auto;
+}
+.gear:hover{background:rgba(255,255,255,.18);}
+.gear:active{transform:scale(.88);}
+.dot{width:7px; height:7px; border-radius:50%; background:#4ADE80; box-shadow:0 0 8px #4ADE80; animation:pulseDot 2s infinite;}
+.net.off .dot{background:#F87171; box-shadow:0 0 8px #F87171;}
+@keyframes pulseDot{0%,100%{transform:scale(1);}50%{transform:scale(.7);}}
+/* ---------- баннер безопасности (только при запуске с диска) ---------- */
+.secwarn{
+  margin-top:12px; display:flex; gap:12px; align-items:flex-start;
+  background:linear-gradient(150deg,#fff7e6,#fdeecb); border:1px solid rgba(242,179,61,.5);
+  border-left:4px solid var(--gold); border-radius:16px; padding:13px 14px;
+  box-shadow:0 10px 24px rgba(15,36,32,.10); animation:rise .4s ease both;
+}
+.secwarn-ic{
+  flex:0 0 auto; width:34px; height:34px; border-radius:10px; background:var(--gold); color:#241A06;
+  display:grid; place-items:center; box-shadow:inset 0 -2px 0 rgba(0,0,0,.12);
+}
+.secwarn-body{flex:1; min-width:0;}
+.secwarn-t{font:700 13.5px/1.3 'Golos Text',system-ui,sans-serif; color:#5a3d06;}
+.secwarn-x{font-size:calc(12.5px * var(--fs))/1.45; color:#7a5a16; margin-top:3px;}
+.secwarn-a{
+  display:inline-flex; align-items:center; gap:6px; margin-top:9px;
+  background:#241A06; color:var(--gold); border:0; border-radius:999px; padding:8px 15px;
+  font:700 12.5px 'Golos Text',system-ui,sans-serif; cursor:pointer; text-decoration:none;
+  transition:transform .15s, opacity .2s;
+}
+.secwarn-a:hover{opacity:.9;}
+.secwarn-a:active{transform:scale(.95);}
+.secwarn-close{flex:0 0 auto; border:0; background:none; color:#9a7320; cursor:pointer; padding:2px; display:grid; place-items:center;}
+/* ---------- липкая панель управления ---------- */
+.sentinel{height:1px;}
+.controls{
+  position:sticky; top:8px; z-index:40;
+  display:flex; flex-direction:column; gap:10px; margin-top:14px;
+}
+.deck{
+  display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:end;
+  background:linear-gradient(150deg,#1A4038,#0E241F); border-radius:18px; padding:12px;
+  box-shadow:0 10px 24px rgba(15,36,32,.22); transition:box-shadow .3s;
+}
+.controls.stuck .deck{box-shadow:0 18px 38px rgba(15,36,32,.42);}
+.lang-label{display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:.16em; color:#93B2A7; margin-bottom:5px;}
+.lang-side.right{text-align:right;}
+.lang-pill{
+  width:100%; border:1px solid transparent; border-radius:13px; padding:11px 8px;
+  font:800 14.5px/1.2 'Golos Text',system-ui,sans-serif; cursor:pointer; transition:transform .2s;
+}
+.lang-pill.from{background:var(--gold); color:#241A06; box-shadow:0 6px 14px rgba(242,179,61,.30);}
+.lang-pill.to{background:var(--teal); color:#04231A; box-shadow:0 6px 14px rgba(15,163,131,.32);}
+.lang-pill:active{transform:scale(.96);}
+.lang-pill.pop{animation:pillFade .3s ease;}
+@keyframes pillFade{from{opacity:.45;}to{opacity:1;}}
+.swap{
+  width:44px; height:44px; border-radius:50%; border:0; background:#fff; color:var(--ink);
+  display:grid; place-items:center; cursor:pointer;
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  transition:transform .45s cubic-bezier(.3,.1,.3,1);
+}
+.swap:active{transform:scale(.9) rotate(var(--rot,0deg));}
+/* ---------- вкладки ---------- */
+.tabs{
+  position:relative; display:grid; grid-template-columns:repeat(3,1fr);
+  background:var(--card); border:1px solid var(--line); border-radius:16px; padding:5px;
+  box-shadow:0 8px 20px rgba(15,36,32,.07); transition:box-shadow .3s;
+}
+.controls.stuck .tabs{box-shadow:0 12px 26px rgba(15,36,32,.16);}
+.tab{
+  position:relative; z-index:1; border:0; background:none; padding:11px 4px; border-radius:12px;
+  font:600 13.5px 'Golos Text'; color:var(--mut); display:flex; gap:7px; align-items:center;
+  justify-content:center; cursor:pointer; transition:color .25s;
+}
+.tab.active{color:#fff;}
+.tab-glider{
+  position:absolute; top:5px; bottom:5px; left:5px; width:calc((100% - 10px)/3);
+  background:var(--ink); border-radius:12px;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 4px 12px rgba(15,36,32,.3);
+}
+/* ---------- панели и карточки ---------- */
+.panel{display:none; margin-top:14px;}
+.panel.active{display:block; animation:rise .35s ease both;}
+@keyframes rise{from{opacity:0; transform:translateY(12px);}to{opacity:1; transform:none;}}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px;
+  box-shadow:0 10px 24px rgba(15,36,32,.06); margin-bottom:12px;
+}
+.card-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;}
+.card-title{font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--mut);}
+.count{font-size:11px; color:var(--mut); font-variant-numeric:tabular-nums;}
+textarea{
+  width:100%; border:0; outline:0; resize:none; background:transparent;
+  font:500 calc(18px * var(--fs))/1.5 'Golos Text',system-ui,sans-serif; color:var(--tx); min-height:84px;
+}
+textarea::placeholder{color:var(--ph);}
+.input-card{transition:border-color .25s, box-shadow .25s;}
+.input-card:focus-within{border-color:rgba(15,163,131,.55); box-shadow:0 0 0 3px rgba(15,163,131,.13);}
+.input-card.flash{animation:flashRing .9s ease;}
+@keyframes flashRing{
+  0%{box-shadow:0 0 0 0 rgba(242,179,61,0);}
+  35%{box-shadow:0 0 0 4px rgba(242,179,61,.30); border-color:var(--gold);}
+  100%{box-shadow:0 0 0 0 rgba(242,179,61,0);}
+}
+.card-actions{display:flex; gap:8px; align-items:center;}
+.icon-btn{
+  width:38px; height:38px; border-radius:12px; border:1px solid var(--line); background:var(--card);
+  color:var(--tx); display:grid; place-items:center; cursor:pointer; transition:background .2s, transform .15s;
+}
+.icon-btn:hover{background:var(--teal-soft); border-color:transparent;}
+.icon-btn:active{transform:scale(.9);}
+.icon-btn.sm{width:32px; height:32px; border-radius:10px;}
+.icon-btn.done{background:var(--teal); color:#fff; border-color:transparent;}
+.icon-btn.rec{background:var(--teal); color:#fff; border-color:transparent; animation:recPulse 1.4s infinite;}
+@keyframes recPulse{0%{box-shadow:0 0 0 0 rgba(15,163,131,.45);}100%{box-shadow:0 0 0 12px rgba(15,163,131,0);}}
+.icon-btn .ic-check{display:none;}
+.icon-btn.done .ic-check{display:block;}
+.icon-btn.done .ic-main{display:none;}
+/* ---------- кнопка «Готово» ---------- */
+.kbd-done{
+  position:fixed; left:50%; bottom:14px; z-index:60;
+  display:flex; align-items:center; gap:8px;
+  background:var(--ink); color:#fff; border:0; border-radius:999px;
+  padding:12px 22px; font:600 14px 'Golos Text',system-ui,sans-serif; cursor:pointer;
+  box-shadow:0 12px 28px rgba(15,36,32,.45);
+  opacity:0; pointer-events:none;
+  transform:translate(-50%, 90px) translateY(calc(-1 * var(--kb, 0px)));
+  transition:transform .35s cubic-bezier(.34,1.3,.64,1), opacity .25s;
+}
+.kbd-done.show{
+  opacity:1; pointer-events:auto;
+  transform:translate(-50%, 0) translateY(calc(-1 * var(--kb, 0px)));
+}
+@media (hover:hover) and (pointer:fine){ .kbd-done{display:none;} }
+/* ---------- быстрые фразы ---------- */
+.quick{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 6px; margin-bottom:12px; scrollbar-width:none;}
+.quick::-webkit-scrollbar{display:none;}
+.chip{
+  flex:0 0 auto; border:1px solid var(--line); background:var(--card); border-radius:999px;
+  padding:8px 14px; font:500 calc(13.5px * var(--fs)) 'Golos Text',system-ui,sans-serif; color:var(--tx);
+  cursor:pointer; transition:background .2s; animation:rise .3s ease both;
+}
+.chip:hover{border-color:var(--gold); background:var(--gold-soft);}
+/* ---------- результат ---------- */
+.result-card{border-left:5px solid var(--teal); background:linear-gradient(180deg,#fff,#F5FBF8); scroll-margin-top:150px;}
+.result-card.gold{border-left-color:var(--gold); background:linear-gradient(180deg,#fff,#FFFBF1);}
+.result-text{font:600 calc(21px * var(--fs))/1.45 'Golos Text',system-ui,sans-serif; min-height:34px; word-break:break-word;}
+.placeholder{color:var(--ph); font-weight:500; font-size:calc(15.5px * var(--fs));}
+.pop-r{display:block; animation:pop .3s ease both;}
+@keyframes pop{from{opacity:0; transform:translateY(7px);}to{opacity:1; transform:none;}}
+.err{color:var(--red); font-size:calc(15px * var(--fs)); font-weight:500;}
+.dots i{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal); margin-right:5px; animation:blink 1s infinite;}
+.dots i:nth-child(2){animation-delay:.2s;} .dots i:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,100%{opacity:.2; transform:translateY(0);}50%{opacity:1; transform:translateY(-4px);}}
+/* ---------- голос и лента диалога ---------- */
+.voice-card{padding:14px;}
+.live-area{
+  background:#F3F8F5; border:1px solid var(--line); border-radius:14px;
+  padding:14px; min-height:112px;
+}
+.wave{display:flex; gap:4px; align-items:flex-end; height:28px; margin-bottom:10px;}
+.wave i{width:4px; height:8px; border-radius:2px; background:var(--teal); opacity:.3; transition:opacity .3s;}
+.listening .wave i{opacity:1; animation:eq .9s ease-in-out infinite;}
+.wave i:nth-child(2),.wave i:nth-child(6){animation-delay:.12s;}
+.wave i:nth-child(3),.wave i:nth-child(5){animation-delay:.24s;}
+.wave i:nth-child(4){animation-delay:.36s;}
+@keyframes eq{0%,100%{height:8px;}50%{height:26px;}}
+.live{font:600 calc(17.5px * var(--fs))/1.45 'Golos Text',system-ui,sans-serif; min-height:26px; text-align:left;}
+.live.interim{color:var(--mut); font-style:italic;}
+.voice-bottom{display:flex; align-items:center; gap:14px; margin-top:16px;}
+.v-info{flex:1; min-width:0;}
+.hint{font-size:calc(14px * var(--fs)); color:var(--mut); margin:0; line-height:1.5;}
+.mic-note{font-size:calc(12.5px * var(--fs)); color:var(--mut); margin:6px 0 0; transition:color .3s;}
+.mic-note.busy{color:var(--teal); font-weight:600;}
+.mic{
+  flex:0 0 auto; width:88px; height:88px; border-radius:50%; border:0; background:var(--ink);
+  color:#fff; display:grid; place-items:center; cursor:pointer; position:relative;
+  box-shadow:0 16px 32px rgba(15,36,32,.38); transition:background .3s, transform .2s;
+}
+.mic:active{transform:scale(.93);}
+.mic.listening{background:var(--teal);}
+.mic::before,.mic::after{content:''; position:absolute; inset:0; border-radius:50%; border:2px solid var(--teal); opacity:0; pointer-events:none;}
+.mic.listening::before{animation:ring 1.6s ease-out infinite;}
+.mic.listening::after{animation:ring 1.6s ease-out .8s infinite;}
+@keyframes ring{0%{transform:scale(1); opacity:.7;}100%{transform:scale(1.9); opacity:0;}}
+.onair{
+  display:inline-flex; align-items:center; gap:5px; font-size:10px; color:var(--red);
+  font-weight:700; letter-spacing:.08em; margin-left:8px; vertical-align:middle;
+}
+.onair i{width:6px; height:6px; border-radius:50%; background:var(--red); animation:pulseDot 1.1s infinite;}
+.v-feed{max-height:48vh; overflow-y:auto; display:flex; flex-direction:column; gap:9px; padding-right:2px;}
+.feed-empty{color:var(--ph); font-size:calc(15px * var(--fs)); text-align:center; padding:18px 10px; margin:0; line-height:1.5;}
+.v-entry{
+  border:1px solid var(--line); border-left:4px solid var(--teal); border-radius:12px;
+  padding:11px 13px; background:var(--card); animation:entryIn .35s ease both;
+  transition:box-shadow .3s, border-color .3s;
+}
+.v-entry.gold{border-left-color:var(--gold);}
+.v-entry.speaking{border-color:rgba(15,163,131,.55); box-shadow:0 0 0 2px rgba(15,163,131,.28), 0 6px 14px rgba(15,36,32,.10);}
+.v-entry.speaking .v-dst{animation:speakPulse 1.2s ease-in-out infinite;}
+@keyframes speakPulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+@keyframes entryIn{from{opacity:0; transform:translateY(10px) scale(.98);}to{opacity:1; transform:none;}}
+.v-src{font-size:calc(14.5px * var(--fs)); color:var(--mut); display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;}
+.v-pair{font-size:10px; font-weight:800; letter-spacing:.1em; color:var(--mut);}
+.v-dst{font:600 calc(19px * var(--fs))/1.4 'Golos Text',system-ui,sans-serif; margin-top:5px; word-break:break-word;}
+.v-actions{display:flex; gap:6px; margin-top:9px;}
+.v-actions .icon-btn{width:34px; height:34px; border-radius:10px;}
+/* ---------- фото ---------- */
+.photo-btns{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.big-btn{
+  display:flex; flex-direction:column; align-items:center; gap:9px; padding:18px 8px;
+  border-radius:16px; border:1.5px dashed rgba(15,163,131,.55); background:var(--teal-soft);
+  font:600 calc(14px * var(--fs)) 'Golos Text'; color:var(--tx); cursor:pointer; transition:all .2s; text-align:center;
+}
+.big-btn.alt{border-color:rgba(242,179,61,.7); background:var(--gold-soft);}
+.big-btn:hover{transform:translateY(-2px); box-shadow:0 10px 20px rgba(15,36,32,.10);}
+.big-btn:active{transform:scale(.97);}
+.preview{margin-top:12px; border-radius:14px; overflow:hidden; border:1px solid var(--line); position:relative; animation:rise .3s ease both;}
+.preview img{display:block; width:100%; max-height:220px; object-fit:cover;}
+.preview-x{
+  position:absolute; top:8px; right:8px; width:32px; height:32px; border-radius:50%; border:0;
+  background:rgba(15,36,32,.62); color:#fff; display:grid; place-items:center; cursor:pointer; transition:background .2s;
+}
+.preview-x:hover{background:rgba(15,36,32,.85);}
+.ocr-progress{display:flex; align-items:center; gap:10px; margin-top:12px;}
+.bar{flex:1; height:8px; background:#E2EBE6; border-radius:99px; overflow:hidden;}
+.bar span{display:block; height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--teal),#4CC8A9); transition:width .25s;}
+#ocrPct{font-size:12px; font-weight:700; color:var(--teal); min-width:40px; text-align:right; font-variant-numeric:tabular-nums;}
+/* ---------- панели (язык и настройки) ---------- */
+.sheet-backdrop{
+  position:fixed; inset:0; background:rgba(10,25,20,.5); z-index:50;
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+.sheet-backdrop.open{opacity:1; pointer-events:auto;}
+.sheet{
+  position:fixed; left:50%; bottom:0; transform:translate(-50%,100%);
+  width:100%; max-width:460px; background:var(--card); border-radius:24px 24px 0 0; z-index:51;
+  transition:transform .38s cubic-bezier(.32,.72,.24,1);
+  padding:10px 14px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 -18px 50px rgba(15,36,32,.35);
+  max-height:88vh; overflow-y:auto;
+}
+.sheet.open{transform:translate(-50%,0);}
+.sheet-handle{width:44px; height:5px; border-radius:99px; background:#D7E2DC; margin:6px auto 12px;}
+.sheet-close{position:absolute; top:14px; right:12px; width:34px; height:34px; border:0; border-radius:10px; background:var(--paper); color:var(--mut); display:grid; place-items:center; cursor:pointer;}
+.sheet-title{font-family:'Unbounded'; font-size:14px; font-weight:600; margin:0 4px 10px; color:var(--tx);}
+.lang-row{
+  display:flex; align-items:center; gap:14px; width:100%; border:0; background:none;
+  padding:12px; border-radius:14px; cursor:pointer; text-align:left;
+  transition:background .2s; animation:rise .3s ease both;
+}
+.lang-row:hover{background:var(--teal-soft);}
+.lang-row.sel{background:var(--gold-soft);}
+.lang-txt{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.lang-native{font:800 16px/1.2 'Golos Text',system-ui,sans-serif; color:var(--tx);}
+.lang-hint{font-size:12px; color:var(--mut);}
+.lang-row .check{margin-left:auto; color:var(--teal); opacity:0; transition:opacity .2s; flex:0 0 auto;}
+.lang-row.sel .check{opacity:1;}
+/* ---------- настройки ---------- */
+.set-sec{margin:16px 0;}
+.set-label{font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); margin:0 2px 8px;}
+.set-note{font-size:12px; color:var(--mut); margin:8px 2px 0; line-height:1.5;}
+.seg{display:grid; grid-template-columns:1fr 1fr; gap:4px; background:var(--paper); border:1px solid var(--line); border-radius:13px; padding:4px;}
+.seg.seg3{grid-template-columns:repeat(3,1fr);}
+.seg button{
+  border:0; background:none; border-radius:10px; padding:10px 6px; cursor:pointer;
+  font:600 13px 'Golos Text',system-ui,sans-serif; color:var(--mut);
+  display:flex; align-items:center; justify-content:center; gap:7px; transition:all .25s;
+}
+.seg button.on{background:var(--ink); color:#fff; box-shadow:0 4px 10px rgba(15,36,32,.25);}
+.seg button:active{transform:scale(.96);}
+.set-list{border:1px solid var(--line); border-radius:14px; padding:4px;}
+.set-list .lang-row{animation:none;}
+.v-list{max-height:230px; overflow-y:auto;}
+.voice-row .icon-btn{margin-left:auto; flex:0 0 auto;}
+.voice-row .check{margin-left:0;}
+.set-author{
+  display:flex; align-items:center; gap:12px; margin-top:20px;
+  background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:13px 14px;
+}
+.set-avatar{
+  width:46px; height:46px; border-radius:50%; background:var(--gold); color:#241A06; flex:0 0 auto;
+  display:grid; place-items:center; font:800 15px 'Unbounded'; box-shadow:inset 0 -3px 0 rgba(0,0,0,.15);
+}
+.set-a1{font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--mut);}
+.set-a2{font:700 15.5px 'Golos Text'; color:var(--tx); margin-top:1px;}
+.set-a3{font-size:11.5px; color:var(--mut); margin-top:1px;}
+/* ---------- перевод выделенного текста ---------- */
+.sel-btn{
+  position:fixed; z-index:65; display:flex; gap:7px; align-items:center;
+  background:var(--gold); color:#241A06; border:0; border-radius:999px; padding:9px 16px;
+  font:700 13px 'Golos Text',system-ui,sans-serif; cursor:pointer;
+  box-shadow:0 10px 24px rgba(15,36,32,.3);
+  opacity:0; pointer-events:none; transform:translate(-50%,6px) scale(.9);
+  transition:all .22s cubic-bezier(.34,1.4,.64,1);
+}
+.sel-btn.show{opacity:1; pointer-events:auto; transform:translate(-50%,0) scale(1);}
+.sel-btn:hover{transform:translate(-50%,-2px) scale(1.04);}
+.sel-pop{
+  position:fixed; z-index:66; width:min(320px, calc(100vw - 24px));
+  background:var(--card); border:1px solid var(--line); border-left:4px solid var(--teal);
+  border-radius:14px; padding:12px; box-shadow:0 18px 44px rgba(15,36,32,.28);
+  opacity:0; pointer-events:none; transform:translateY(8px); transition:all .25s;
+}
+.sel-pop.show{opacity:1; pointer-events:auto; transform:none;}
+.sel-pop.gold{border-left-color:var(--gold);}
+.sel-head{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;}
+.sel-pair{font-size:10px; font-weight:800; letter-spacing:.12em; color:var(--mut);}
+.sel-src{font-size:calc(13.5px * var(--fs)); color:var(--mut); margin-bottom:5px;}
+.sel-dst{font:600 calc(17px * var(--fs))/1.4 'Golos Text',system-ui,sans-serif; color:var(--tx); word-break:break-word;}
+/* ---------- история ---------- */
+.hist-head{display:flex; justify-content:space-between; align-items:baseline; margin:20px 2px 10px;}
+.hist-head h2{font-family:'Unbounded'; font-size:15px; font-weight:600; letter-spacing:.04em; margin:0; color:var(--tx);}
+#histClear{border:0; background:none; color:var(--mut); font:500 12.5px 'Golos Text'; cursor:pointer; text-decoration:underline dotted; padding:4px;}
+.hist-item{
+  background:var(--card); border:1px solid var(--line); border-radius:14px; padding:11px 13px;
+  margin-bottom:8px; cursor:pointer; transition:all .2s; animation:rise .3s ease both;
+}
+.hist-item:hover{border-color:var(--teal); transform:translateX(4px); box-shadow:0 6px 14px rgba(15,36,32,.08);}
+.hist-src{font-weight:600; font-size:calc(15px * var(--fs)); color:var(--tx);}
+.hist-dst{font-size:calc(14.5px * var(--fs)); color:var(--mut); margin-top:3px;}
+.hist-meta{font-size:10px; color:var(--mut); margin-top:6px; letter-spacing:.08em; text-transform:uppercase;}
+.foot{margin-top:24px; text-align:center; font-size:11.5px; color:var(--mut); line-height:1.7;}
+:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+@media (max-width:360px){
+  .name{font-size:20px;} .lang-pill{font-size:13px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<main class="app">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8.5 5v10L12 22 3.5 17V7z"/>
+          <path d="M8.5 9.5h7l-2.3-2.3"/>
+          <path d="M15.5 14.5h-7l2.3 2.3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="name">ТОЛМАЧ</div>
+        <div class="tag" data-i18n="tag">голос · текст · фото — 6 языков</div>
+      </div>
+      <div class="net" id="netChip"><span class="dot"></span><span id="netText">онлайн</span></div>
+      <button class="gear" id="gearBtn" aria-label="Настройки">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- БАННЕР: только при запуске файла с диска -->
+  <div class="secwarn" id="secWarn" hidden>
+    <div class="secwarn-ic" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="secwarn-body">
+      <div class="secwarn-t" data-i18n="secWarnT">Файл открыт с компьютера</div>
+      <div class="secwarn-x" data-i18n="secWarnX">Поэтому браузер каждый раз спрашивает разрешения на микрофон и буфер, а диалог идёт по одной фразе. Разместите файл по HTTPS — запросы исчезнут, диалог станет непрерывным.</div>
+      <a class="secwarn-a" id="secWarnLink" href="https://app.netlify.com/drop" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span data-i18n="secWarnBtn">Разместить бесплатно</span>
+      </a>
+    </div>
+    <button class="secwarn-close" id="secWarnClose" aria-label="✕">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="sentinel" id="sentinel"></div>
+  <div class="controls" id="controls">
+    <section class="deck">
+      <div class="lang-side">
+        <span class="lang-label" data-i18n="lblFrom">Исходный</span>
+        <button class="lang-pill from" id="fromPill"><span id="fromName">Русский</span></button>
+      </div>
+      <button class="swap" id="swapBtn" aria-label="⇄">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3.5-3.5"/><path d="M20 16H7l3.5 3.5"/></svg>
+      </button>
+      <div class="lang-side right">
+        <span class="lang-label" data-i18n="lblTo">Перевод на</span>
+        <button class="lang-pill to" id="toPill"><span id="toName">English</span></button>
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="Режим">
+      <span class="tab-glider" id="glider"></span>
+      <button class="tab active" data-mode="text" role="tab">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/></svg>
+        <span data-i18n="tabText">Текст</span>
+      </button>
+      <button class="tab" data-mode="voice" role="tab">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+        <span data-i18n="tabVoice">Голос</span>
+      </button>
+      <button class="tab" data-mode="photo" role="tab">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <span data-i18n="tabPhoto">Фото</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ═══ ТЕКСТ ═══ -->
+  <section class="panel active" id="panel-text">
+    <div class="card input-card" id="inputCard">
+      <div class="card-head">
+        <span class="card-title" id="srcTitle">Русский</span>
+        <div class="card-actions">
+          <span class="count" id="charCount">0</span>
+          <button class="icon-btn" id="pasteBtn" title="⎘">
+            <svg class="ic-main" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+          </button>
+          <button class="icon-btn" id="dictBtn" title="🎙">
+            <svg class="ic-main" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+          </button>
+          <button class="icon-btn" id="clearBtn">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <textarea id="srcInput" rows="4" data-i18n-ph="phInput" placeholder="Введите текст или надиктуйте — перевод появится сразу…" aria-label="Текст"></textarea>
+    </div>
+
+    <div class="quick" id="quickRow"></div>
+
+    <div class="card result-card" id="rcText">
+      <div class="card-head">
+        <span class="card-title" id="dstTitle">English · перевод</span>
+        <div class="card-actions">
+          <button class="icon-btn" id="speakDst">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></svg>
+          </button>
+          <button class="icon-btn" id="copyDst">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg class="ic-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="result-text" id="resultText" aria-live="polite"><span class="placeholder" data-i18n="phResult">Перевод появится здесь</span></div>
+    </div>
+  </section>
+
+  <!-- ═══ ГОЛОС ═══ -->
+  <section class="panel" id="panel-voice">
+    <div class="card voice-card" id="voiceCard">
+      <div class="live-area">
+        <div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="live" id="liveText" aria-live="polite"><span class="placeholder" data-i18n="phLive">Здесь появится распознанный текст</span></div>
+      </div>
+      <div class="voice-bottom">
+        <div class="v-info">
+          <p class="hint" id="voiceHint">Распознавание: Русский → перевод: English</p>
+          <p class="mic-note" id="micNote">Нажмите — и говорите. Язык определится сам, перевод прозвучит вслух</p>
+        </div>
+        <button class="mic" id="micBtn" aria-label="Диалог">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title"><span data-i18n="dlgTitle">Диалог</span><span class="onair" id="onAir" hidden><i></i><span data-i18n="dlgRec">идёт запись</span></span></span>
+        <div class="card-actions">
+          <span class="count" id="feedCount">0 фраз</span>
+          <button class="icon-btn" id="feedClear">
+            <svg class="ic-main" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="v-feed" id="voiceFeed">
+        <p class="feed-empty" id="feedEmpty" data-i18n="phFeed">Нажмите на микрофон и говорите на любом из шести языков — язык определится автоматически, фраза появится текстом и прозвучит переводом</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ФОТО ═══ -->
+  <section class="panel" id="panel-photo">
+    <div class="card">
+      <div class="photo-btns">
+        <label class="big-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          <span data-i18n="photoTake">Снять фото</span>
+          <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+        </label>
+        <label class="big-btn alt">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span data-i18n="photoGallery">Из галереи</span>
+          <input type="file" id="galInput" accept="image/*" hidden>
+        </label>
+      </div>
+      <div class="preview" id="preview" hidden>
+        <img id="previewImg" alt="">
+        <button class="preview-x" id="previewX" aria-label="✕">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="ocr-progress" id="ocrBar" hidden>
+        <div class="bar"><span id="ocrFill"></span></div><span id="ocrPct">0%</span>
+      </div>
+      <p class="hint" id="ocrNote" style="margin-top:12px;">Сфотографируйте вывеску, меню или документ. Текст распознаётся на исходном языке и переведётся. При первом запуске загружается модель (~2–4 МБ).</p>
+    </div>
+
+    <div class="card" id="ocrTextCard" hidden>
+      <div class="card-head">
+        <span class="card-title" data-i18n="ocrCard">Распознанный текст · можно править</span>
+        <div class="card-actions">
+          <button class="icon-btn" id="copyOcr">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg class="ic-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <textarea id="ocrText" rows="3"></textarea>
+    </div>
+
+    <div class="card result-card" id="rcPhoto">
+      <div class="card-head">
+        <span class="card-title" id="pDstTitle">English · перевод</span>
+        <div class="card-actions">
+          <button class="icon-btn" id="pSpeak">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 9a4 4 0 0 1 0 6"/><path d="M18 6.5a8 8 0 0 1 0 11"/></svg>
+          </button>
+          <button class="icon-btn" id="pCopy">
+            <svg class="ic-main" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg class="ic-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="result-text" id="pResult" aria-live="polite"><span class="placeholder" data-i18n="phResult">Перевод появится здесь</span></div>
+    </div>
+  </section>
+
+  <section id="historySec" hidden>
+    <div class="hist-head">
+      <h2 data-i18n="histTitle">Недавние переводы</h2>
+      <button id="histClear" data-i18n="histClear">Очистить</button>
+    </div>
+    <div id="histList"></div>
+  </section>
+
+  <footer class="foot">
+    <span data-i18n="footApi">Бесплатные публичные API: Google Translate + MyMemory (резерв) · OCR: Tesseract.js</span><br>
+    <b data-i18n="footAuthor">Автор — Ивашикин Николай</b><br>
+    <span data-i18n="footNet">Нужен интернет · микрофон и камера доступны по HTTPS</span>
+  </footer>
+</main>
+
+<!-- ПЕРЕВОД ВЫДЕЛЕННОГО ТЕКСТА (ТЕЛЕФОН И КОМПЬЮТЕР) -->
+<button class="sel-btn" id="selBtn">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+  <span data-i18n="selTranslate">Перевести</span>
+</button>
+<div class="sel-pop" id="selPop">
+  <div class="sel-head">
+    <span class="sel-pair" id="selPair"></span>
+    <div class="card-actions">
+      <button class="icon-btn sm" id="selSpeak">
+        <svg class="ic-main" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 9a4 4 0 0 1 0 6"/></svg>
+      </button>
+      <button class="icon-btn sm" id="selCopy">
+        <svg class="ic-main" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <svg class="ic-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>
+      </button>
+      <button class="icon-btn sm" id="selClose">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sel-src" id="selSrc"></div>
+  <div class="sel-dst" id="selDst"></div>
+</div>
+
+<button class="kbd-done" id="kbdDone" aria-label="⌨">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/><line x1="5" y1="20" x2="19" y2="20"/></svg>
+  <span data-i18n="kbdDone">Готово</span>
+</button>
+
+<!-- ПАНЕЛЬ ВЫБОРА ЯЗЫКА -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-handle" aria-hidden="true"></div>
+  <button class="sheet-close" id="sheetClose" aria-label="✕">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <h3 class="sheet-title" id="sheetTitle">Исходный язык</h3>
+  <div id="sheetList"></div>
+</div>
+
+<!-- НАСТРОЙКИ -->
+<div class="sheet-backdrop" id="setBackdrop"></div>
+<div class="sheet" id="setSheet" role="dialog" aria-modal="true">
+  <div class="sheet-handle" aria-hidden="true"></div>
+  <button class="sheet-close" id="setClose" aria-label="✕">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <h3 class="sheet-title" data-i18n="setTitle">Настройки</h3>
+
+  <div class="set-sec">
+    <div class="set-label" data-i18n="setTheme">Тема</div>
+    <div class="seg" id="segTheme">
+      <button data-v="light">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <span data-i18n="setLight">Светлая</span>
+      </button>
+      <button data-v="dark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+        <span data-i18n="setDark">Тёмная</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="set-sec">
+    <div class="set-label" data-i18n="setFont">Размер шрифта</div>
+    <div class="seg seg3" id="segFont">
+      <button data-v="s"><span data-i18n="setFontS">Маленький</span></button>
+      <button data-v="m"><span data-i18n="setFontM">Средний</span></button>
+      <button data-v="l"><span data-i18n="setFontL">Крупный</span></button>
+    </div>
+  </div>
+
+  <div class="set-sec">
+    <div class="set-label" data-i18n="setLang">Язык интерфейса</div>
+    <div class="set-list" id="uiLangList"></div>
+  </div>
+
+  <div class="set-sec">
+    <div class="set-label" data-i18n="setVoice">Голос перевода</div>
+    <div class="set-list v-list" id="voiceList"></div>
+    <p class="set-note" data-i18n="voiceNote">Нажмите ♪, чтобы прослушать голос. Если выбранный голос не поддерживает язык фразы, будет использован системный.</p>
+  </div>
+
+  <div class="set-author">
+    <div class="set-avatar">ИН</div>
+    <div>
+      <div class="set-a1" data-i18n="authorLabel">Автор</div>
+      <div class="set-a2">Ивашикин Николай</div>
+      <div class="set-a3">Толмач · v3.3</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const buzz = ms => { if (navigator.vibrate) navigator.vibrate(ms); };
+const blurActive = ()=>{ const a = document.activeElement; if (a && /TEXTAREA|INPUT/.test(a.tagName)) a.blur(); };
+
+/* файл открыт с диска (file://) — не безопасный контекст для микрофона/буфера */
+const LOCAL_FILE = (location.protocol === 'file:');
+
+/* ══════════ ЯЗЫКИ ══════════ */
+const LANGS = {
+  ru:{ native:'Русский',    gtx:'ru',    mm:'ru',    speech:'ru-RU', tess:'rus' },
+  en:{ native:'English',    gtx:'en',    mm:'en',    speech:'en-US', tess:'eng' },
+  zh:{ native:'中文',        gtx:'zh-CN', mm:'zh-CN', speech:'zh-CN', tess:'chi_sim' },
+  vi:{ native:'Tiếng Việt', gtx:'vi',    mm:'vi',    speech:'vi-VN', tess:'vie' },
+  th:{ native:'ไทย',         gtx:'th',    mm:'th',    speech:'th-TH', tess:'tha' },
+  kk:{ native:'Қазақша',    gtx:'kk',    mm:'kk',    speech:'kk-KZ', tess:'kaz' },
+};
+const ORDER = ['ru','en','zh','vi','th','kk'];
+const PHRASES = {
+  ru:['Здравствуйте','Сколько это стоит?','Где вокзал?','Мне нужна помощь','Спасибо большое'],
+  en:['Hello','How much is it?','Where is the station?','I need help','Thank you very much'],
+  zh:['你好','这个多少钱？','火车站在哪里？','我需要帮助','非常感谢'],
+  vi:['Xin chào','Cái này bao nhiêu?','Ga tàu ở đâu?','Tôi cần giúp đỡ','Cảm ơn nhiều'],
+  th:['สวัสดี','เท่าไรครับ?','สถานีรถไฟอยู่ที่ไหน?','ฉันต้องการความช่วยเหลือ','ขอบคุณมาก'],
+  kk:['Сәлеметсіз бе','Бұл қанша тұрады?','Вокзал қайда?','Маған көмек керек','Рахмет'],
+};
+const VOICE_SAMPLE = {
+  ru:'Здравствуйте! Так звучит выбранный голос перевода.',
+  en:'Hello! This is how your translation voice sounds.',
+  zh:'你好!这是翻译语音的声音。',
+  vi:'Xin chào! Đây là giọng đọc bản dịch của bạn.',
+  th:'สวัสดี! นี่คือเสียงอ่านคำแปลของคุณ',
+  kk:'Сәлеметсіз бе! Бұл — аударма дауысының үні.',
+};
+const state = { from:'ru', to:'en', last:{ text:null, photo:null } };
+
+/* ══════════ НАСТРОЙКИ (сохраняются) ══════════ */
+const SETTINGS_KEY = 'tolmach_settings';
+let settings = { theme:'light', ui:'ru', font:'m', voice:'auto' };
+try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}); } catch(e){}
+function saveSettings(){ try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e){} }
+
+/* ══════════ ПЕРЕВОД ИНТЕРФЕЙСА (6 языков) ══════════ */
+const UI = {
+ru:{docTitle:'Толмач — голосовой переводчик: русский, английский, китайский, вьетнамский, тайский, казахский',tag:'голос · текст · фото — 6 языков',tabText:'Текст',tabVoice:'Голос',tabPhoto:'Фото',lblFrom:'Исходный',lblTo:'Перевод на',translation:'перевод',recog:'Распознавание',phInput:'Введите текст или надиктуйте — перевод появится сразу…',phResult:'Перевод появится здесь',phLive:'Здесь появится распознанный текст',phFeed:'Нажмите на микрофон и говорите на любом из шести языков — язык определится автоматически, фраза появится текстом и прозвучит переводом',micIdle:'Нажмите — и говорите. Язык определится сам, перевод прозвучит вслух',micIdleLocal:'Нажмите и скажите фразу — перевод прозвучит. Для следующей фразы нажмите снова',micListen:'Слушаю… нажмите, чтобы остановиться',micBusy:'Озвучиваю перевод…',micNoHear:'Не расслышал — продолжаю слушать',micDenied:'Доступ к микрофону запрещён — разрешите в настройках браузера',micNoSR:'Браузер не поддерживает распознавание речи — используйте ввод текста',micNoSRFeed:'Браузер не поддерживает распознавание речи — диалог доступен в Chrome на Android и в Safari на iPhone',btnSettings:'Настройки',setTitle:'Настройки',setTheme:'Тема',setLight:'Светлая',setDark:'Тёмная',setLang:'Язык интерфейса',setFont:'Размер шрифта',setFontS:'Маленький',setFontM:'Средний',setFontL:'Крупный',setVoice:'Голос перевода',voiceAuto:'Системный голос',voiceAutoHint:'на усмотрение системы',voiceNote:'Нажмите ♪, чтобы прослушать голос. Если выбранный голос не поддерживает язык фразы, будет использован системный.',gFemale:'женский',gMale:'мужской',authorLabel:'Автор',histTitle:'Недавние переводы',histClear:'Очистить',photoTake:'Снять фото',photoGallery:'Из галереи',ocrNote:'Сфотографируйте вывеску, меню или документ. Текст распознаётся на исходном языке и переведётся. При первом запуске загружается модель (~2–4 МБ).',ocrRun:'Распознаём текст',ocrDone:'Готово! Текст распознан — перевод ниже.',ocrFail:'Не удалось обработать фото. Проверьте интернет и попробуйте снова.',ocrEmpty:'Текст не найден — сделайте фото крупнее и светлее.',ocrCard:'Распознанный текст · можно править',dlgTitle:'Диалог',dlgRec:'идёт запись',dlgClear:'Очистить диалог',netOn:'онлайн',netOff:'офлайн',errTranslate:'Не удалось перевести. Проверьте интернет и попробуйте ещё раз.',kbdDone:'Готово',selTranslate:'Перевести',pasteTitle:'Вставить из буфера и перевести',secWarnT:'Файл открыт с компьютера',secWarnX:'Поэтому браузер каждый раз спрашивает разрешения на микрофон и буфер, а диалог идёт по одной фразе. Разместите файл по HTTPS — запросы исчезнут, диалог станет непрерывным.',secWarnBtn:'Разместить бесплатно',phrases1:'фраза',phrases2:'фразы',phrases5:'фраз',lng_ru:'Русский',lng_en:'Английский',lng_zh:'Китайский',lng_vi:'Вьетнамский',lng_th:'Тайский',lng_kk:'Казахский',footApi:'Бесплатные публичные API: Google Translate + MyMemory (резерв) · OCR: Tesseract.js',footAuthor:'Автор — Ивашикин Николай',footNet:'Нужен интернет · микрофон и камера доступны по HTTPS'},
+en:{docTitle:'Tolmach — voice translator: Russian, English, Chinese, Vietnamese, Thai, Kazakh',tag:'voice · text · photo — 6 languages',tabText:'Text',tabVoice:'Voice',tabPhoto:'Photo',lblFrom:'From',lblTo:'Translate to',translation:'translation',recog:'Recognition',phInput:'Type or dictate — the translation appears instantly…',phResult:'The translation will appear here',phLive:'Recognized text will appear here',phFeed:'Tap the mic and speak any of the six languages — the language is detected automatically, the phrase appears as text and the translation is spoken aloud',micIdle:'Tap and speak. The language is auto-detected, the translation is spoken aloud',micIdleLocal:'Tap and say a phrase — the translation is spoken. Tap again for the next phrase',micListen:'Listening… tap to stop',micBusy:'Speaking the translation…',micNoHear:"Didn't catch that — still listening",micDenied:'Microphone access denied — allow it in the browser settings',micNoSR:'This browser does not support speech recognition — use the Text tab',micNoSRFeed:'This browser does not support speech recognition — the dialog works in Chrome on Android and Safari on iPhone',btnSettings:'Settings',setTitle:'Settings',setTheme:'Theme',setLight:'Light',setDark:'Dark',setLang:'Interface language',setFont:'Font size',setFontS:'Small',setFontM:'Medium',setFontL:'Large',setVoice:'Translation voice',voiceAuto:'System voice',voiceAutoHint:'chosen by the system',voiceNote:'Tap ♪ to preview a voice. If the chosen voice does not support the phrase language, the system voice is used.',gFemale:'female',gMale:'male',authorLabel:'Author',histTitle:'Recent translations',histClear:'Clear',photoTake:'Take a photo',photoGallery:'From gallery',ocrNote:'Photograph a sign, menu or document. The text is recognized and translated. The model (~2–4 MB) loads on first run.',ocrRun:'Recognizing text',ocrDone:'Done! Text recognized — translation below.',ocrFail:'Could not process the photo. Check your internet connection and try again.',ocrEmpty:'No text found — take a closer and brighter photo.',ocrCard:'Recognized text · editable',dlgTitle:'Dialog',dlgRec:'recording',dlgClear:'Clear dialog',netOn:'online',netOff:'offline',errTranslate:'Translation failed. Check your internet connection and try again.',kbdDone:'Done',selTranslate:'Translate',pasteTitle:'Paste from clipboard and translate',secWarnT:'File opened from this computer',secWarnX:'That is why the browser keeps asking for microphone and clipboard access, and the dialog runs one phrase at a time. Host the file over HTTPS — the prompts disappear and the dialog becomes continuous.',secWarnBtn:'Host for free',phrases1:'phrase',phrases2:'phrases',phrases5:'phrases',phrases:'phrases',lng_ru:'Russian',lng_en:'English',lng_zh:'Chinese',lng_vi:'Vietnamese',lng_th:'Thai',lng_kk:'Kazakh',footApi:'Free public APIs: Google Translate + MyMemory (backup) · OCR: Tesseract.js',footAuthor:'Author — Nikolai Ivashkin',footNet:'Internet required · microphone and camera need HTTPS'},
+zh:{docTitle:'Tolmach — 语音翻译:俄语、英语、中文、越南语、泰语、哈萨克语',tag:'语音 · 文字 · 照片 — 6种语言',tabText:'文字',tabVoice:'语音',tabPhoto:'照片',lblFrom:'源语言',lblTo:'翻译为',translation:'翻译',recog:'识别',phInput:'输入或口述 — 翻译立即显示…',phResult:'翻译将显示在这里',phLive:'识别的文本将显示在这里',phFeed:'点击麦克风,用六种语言中的任意一种说话 — 自动识别语言,句子以文字显示并朗读翻译',micIdle:'点击即可说话。自动识别语言,翻译会朗读出来',micIdleLocal:'点击并说一句话 — 翻译会朗读。下一句请再次点击',micListen:'正在聆听…点击停止',micBusy:'正在朗读翻译…',micNoHear:'没听清 — 继续聆听',micDenied:'麦克风访问被拒绝 — 请在浏览器设置中允许',micNoSR:'浏览器不支持语音识别 — 请使用"文字"标签',micNoSRFeed:'浏览器不支持语音识别 — 对话功能适用于 Android 版 Chrome 和 iPhone 版 Safari',btnSettings:'设置',setTitle:'设置',setTheme:'主题',setLight:'浅色',setDark:'深色',setLang:'界面语言',setFont:'字体大小',setFontS:'小',setFontM:'中',setFontL:'大',setVoice:'翻译语音',voiceAuto:'系统语音',voiceAutoHint:'由系统选择',voiceNote:'点击 ♪ 试听语音。若所选语音不支持该短语语言,将使用系统语音。',gFemale:'女声',gMale:'男声',authorLabel:'作者',histTitle:'最近翻译',histClear:'清除',photoTake:'拍照',photoGallery:'从相册',ocrNote:'拍摄招牌、菜单或文件。文本将按源语言识别并翻译。首次运行时加载模型(约2–4 MB)。',ocrRun:'正在识别文本',ocrDone:'完成!文本已识别 — 翻译如下。',ocrFail:'无法处理照片。请检查网络后重试。',ocrEmpty:'未找到文字 — 请靠近一点,在明亮处重拍。',ocrCard:'识别的文本 · 可编辑',dlgTitle:'对话',dlgRec:'录音中',dlgClear:'清除对话',netOn:'在线',netOff:'离线',errTranslate:'翻译失败。请检查网络后重试。',kbdDone:'完成',selTranslate:'翻译',pasteTitle:'从剪贴板粘贴并翻译',secWarnT:'文件从本机打开',secWarnX:'因此浏览器每次都会询问麦克风和剪贴板权限,且对话逐句进行。请通过 HTTPS 托管文件 — 提示将消失,对话将连续进行。',secWarnBtn:'免费托管',phrases1:'句',phrases2:'句',phrases5:'句',phrases:'句',lng_ru:'俄语',lng_en:'英语',lng_zh:'中文',lng_vi:'越南语',lng_th:'泰语',lng_kk:'哈萨克语',footApi:'免费公共 API:Google Translate + MyMemory(备用) · OCR:Tesseract.js',footAuthor:'作者 — Nikolai Ivashkin',footNet:'需要网络 · 麦克风和摄像头需 HTTPS'},
+vi:{docTitle:'Tolmach — phiên dịch giọng nói: Nga, Anh, Trung, Việt, Thái, Kazakh',tag:'giọng nói · văn bản · ảnh — 6 ngôn ngữ',tabText:'Văn bản',tabVoice:'Giọng nói',tabPhoto:'Ảnh',lblFrom:'Từ',lblTo:'Dịch sang',translation:'bản dịch',recog:'Nhận dạng',phInput:'Nhập hoặc đọc — bản dịch hiện ra ngay…',phResult:'Bản dịch sẽ hiện ở đây',phLive:'Văn bản nhận dạng sẽ hiện ở đây',phFeed:'Nhấn micrô và nói bằng bất kỳ ngôn ngữ nào trong sáu ngôn ngữ — ngôn ngữ được nhận dạng tự động, câu hiện dạng văn bản và bản dịch được đọc to',micIdle:'Nhấn và nói. Ngôn ngữ tự nhận dạng, bản dịch được đọc to',micIdleLocal:'Nhấn và nói một câu — bản dịch được đọc to. Nhấn lại cho câu tiếp theo',micListen:'Đang nghe… nhấn để dừng',micBusy:'Đang đọc bản dịch…',micNoHear:'Chưa nghe rõ — vẫn đang nghe',micDenied:'Truy cập micrô bị từ chối — hãy cho phép trong cài đặt trình duyệt',micNoSR:'Trình duyệt không hỗ trợ nhận dạng giọng nói — hãy dùng tab Văn bản',micNoSRFeed:'Trình duyệt không hỗ trợ nhận dạng giọng nói — hội thoại khả dụng trên Chrome cho Android và Safari cho iPhone',btnSettings:'Cài đặt',setTitle:'Cài đặt',setTheme:'Giao diện',setLight:'Sáng',setDark:'Tối',setLang:'Ngôn ngữ giao diện',setFont:'Cỡ chữ',setFontS:'Nhỏ',setFontM:'Vừa',setFontL:'Lớn',setVoice:'Giọng đọc bản dịch',voiceAuto:'Giọng hệ thống',voiceAutoHint:'do hệ thống chọn',voiceNote:'Nhấn ♪ để nghe thử. Nếu giọng đã chọn không hỗ trợ ngôn ngữ của câu, sẽ dùng giọng hệ thống.',gFemale:'nữ',gMale:'nam',authorLabel:'Tác giả',histTitle:'Bản dịch gần đây',histClear:'Xóa',photoTake:'Chụp ảnh',photoGallery:'Từ thư viện',ocrNote:'Chụp biển hiệu, thực đơn hoặc tài liệu. Văn bản được nhận dạng và dịch. Mô hình (~2–4 MB) tải ở lần dùng đầu.',ocrRun:'Đang nhận dạng văn bản',ocrDone:'Xong! Đã nhận dạng văn bản — bản dịch bên dưới.',ocrFail:'Không thể xử lý ảnh. Kiểm tra mạng và thử lại.',ocrEmpty:'Không tìm thấy chữ — hãy chụp gần hơn và sáng hơn.',ocrCard:'Văn bản nhận dạng · có thể sửa',dlgTitle:'Hội thoại',dlgRec:'đang ghi',dlgClear:'Xóa hội thoại',netOn:'trực tuyến',netOff:'ngoại tuyến',errTranslate:'Không thể dịch. Kiểm tra mạng và thử lại.',kbdDone:'Xong',selTranslate:'Dịch',pasteTitle:'Dán từ clipboard và dịch',secWarnT:'Tệp được mở từ máy này',secWarnX:'Vì vậy trình duyệt liên tục hỏi quyền micrô và clipboard, và hội thoại chạy từng câu. Hãy lưu trữ tệp qua HTTPS — các lời nhắc sẽ biến mất và hội thoại trở nên liên tục.',secWarnBtn:'Lưu trữ miễn phí',phrases1:'câu',phrases2:'câu',phrases5:'câu',phrases:'câu',lng_ru:'Tiếng Nga',lng_en:'Tiếng Anh',lng_zh:'Tiếng Trung',lng_vi:'Tiếng Việt',lng_th:'Tiếng Thái',lng_kk:'Tiếng Kazakh',footApi:'API công cộng miễn phí: Google Translate + MyMemory (dự phòng) · OCR: Tesseract.js',footAuthor:'Tác giả — Nikolai Ivashkin',footNet:'Cần mạng · micrô và máy ảnh cần HTTPS'},
+th:{docTitle:'Tolmach — โปรแกรมแปลเสียง: รัสเซีย อังกฤษ จีน เวียดนาม ไทย คาซัค',tag:'เสียง · ข้อความ · ภาพถ่าย — 6 ภาษา',tabText:'ข้อความ',tabVoice:'เสียง',tabPhoto:'ภาพถ่าย',lblFrom:'จาก',lblTo:'แปลเป็น',translation:'คำแปล',recog:'การรู้จำ',phInput:'พิมพ์หรือพูด — คำแปลแสดงทันที…',phResult:'คำแปลจะแสดงที่นี่',phLive:'ข้อความที่รู้จำจะแสดงที่นี่',phFeed:'แตะไมโครโฟนแล้วพูดภาษาใดก็ได้ในหกภาษา — ระบบตรวจจับภาษาอัตโนมัติ ข้อความจะแสดงและอ่านคำแปลออกเสียง',micIdle:'แตะแล้วพูดได้เลย ระบบตรวจจับภาษาอัตโนมัติและอ่านคำแปลออกเสียง',micIdleLocal:'แตะแล้วพูดหนึ่งประโยค — คำแปลจะออกเสียง แตะอีกครั้งสำหรับประโยคถัดไป',micListen:'กำลังฟัง… แตะเพื่อหยุด',micBusy:'กำลังอ่านคำแปล…',micNoHear:'ไม่ได้ยิน — ยังฟังอยู่',micDenied:'การเข้าถึงไมโครโฟนถูกปฏิเสธ — โปรดอนุญาตในการตั้งค่าเบราว์เซอร์',micNoSR:'เบราว์เซอร์ไม่รองรับการรู้จำเสียง — ใช้แท็บข้อความ',micNoSRFeed:'เบราว์เซอร์ไม่รองรับการรู้จำเสียง — บทสนทนาใช้ได้บน Chrome สำหรับ Android และ Safari สำหรับ iPhone',btnSettings:'การตั้งค่า',setTitle:'การตั้งค่า',setTheme:'ธีม',setLight:'สว่าง',setDark:'มืด',setLang:'ภาษาอินเทอร์เฟซ',setFont:'ขนาดตัวอักษร',setFontS:'เล็ก',setFontM:'กลาง',setFontL:'ใหญ่',setVoice:'เสียงอ่านคำแปล',voiceAuto:'เสียงระบบ',voiceAutoHint:'ระบบเลือกให้',voiceNote:'แตะ ♪ เพื่อฟังตัวอย่าง หากเสียงที่เลือกไม่รองรับภาษาของประโยค จะใช้เสียงระบบ',gFemale:'หญิง',gMale:'ชาย',authorLabel:'ผู้เขียน',histTitle:'คำแปลล่าสุด',histClear:'ล้าง',photoTake:'ถ่ายภาพ',photoGallery:'จากแกลเลอรี',ocrNote:'ถ่ายภาพป้าย เมนู หรือเอกสาร ข้อความจะถูกรู้จำและแปล โมเดล (~2–4 MB) โหลดในการใช้ครั้งแรก',ocrRun:'กำลังรู้จำข้อความ',ocrDone:'เสร็จสิ้น! รู้จำข้อความแล้ว — คำแปลด้านล่าง',ocrFail:'ไม่สามารถประมวลผลภาพ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',ocrEmpty:'ไม่พบข้อความ — ถ่ายให้ใกล้ขึ้นและสว่างขึ้น',ocrCard:'ข้อความที่รู้จำ · แก้ไขได้',dlgTitle:'บทสนทนา',dlgRec:'กำลังบันทึก',dlgClear:'ล้างบทสนทนา',netOn:'ออนไลน์',netOff:'ออฟไลน์',errTranslate:'แปลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',kbdDone:'เสร็จ',selTranslate:'แปล',pasteTitle:'วางจากคลิปบอร์ดและแปล',secWarnT:'เปิดไฟล์จากเครื่องนี้',secWarnX:'ดังนั้นเบราว์เซอร์จึงถามสิทธิ์ไมโครโฟนและคลิปบอร์ดทุกครั้ง และบทสนทนาทำงานทีละประโยค กรุณาโฮสต์ไฟล์ผ่าน HTTPS — คำเตือนจะหายไปและบทสนทนาจะต่อเนื่อง',secWarnBtn:'โฮสต์ฟรี',phrases1:'ประโยค',phrases2:'ประโยค',phrases5:'ประโยค',phrases:'ประโยค',lng_ru:'รัสเซีย',lng_en:'อังกฤษ',lng_zh:'จีน',lng_vi:'เวียดนาม',lng_th:'ไทย',lng_kk:'คาซัค',footApi:'API สาธารณะฟรี: Google Translate + MyMemory (สำรอง) · OCR: Tesseract.js',footAuthor:'ผู้เขียน — Nikolai Ivashkin',footNet:'ต้องใช้อินเทอร์เน็ต · ไมโครโฟนและกล้องต้อง HTTPS'},
+kk:{docTitle:'Толмач — дауыстық аудармашы: орыс, ағылшын, қытай, вьетнам, тай, қазақ',tag:'дауыс · мәтін · фото — 6 тіл',tabText:'Мәтін',tabVoice:'Дауыс',tabPhoto:'Фото',lblFrom:'Бастапқы',lblTo:'Аударма тілі',translation:'аударма',recog:'Тану',phInput:'Мәтінді жазыңыз немесе айтыңыз — аударма бірден шығады…',phResult:'Аударма осында шығады',phLive:'Танылған мәтін осында шығады',phFeed:'Микрофонды басып, алты тілдің кез келгенінде сөйлеңіз — тіл автоматты анықталады, сөйлем мәтін түрінде шығып, аудармасы дауысталады',micIdle:'Басыңыз да сөйлеңіз. Тіл автоматты анықталады, аударма дыбысталады',micIdleLocal:'Басып сөйлем айтыңыз — аударма дыбысталады. Келесі сөйлем үшін қайта басыңыз',micListen:'Тыңдап тұрмын… тоқтату үшін басыңыз',micBusy:'Аударманы дыбыстап жатырмын…',micNoHear:'Естімедім — тыңдауды жалғастырудамын',micDenied:'Микрофонға рұқсат жоқ — браузер баптауларынан рұқсат етіңіз',micNoSR:'Браузер дауысты тануды қолдамайды — «Мәтін» қойындысын қолданыңыз',micNoSRFeed:'Браузер дауысты тануды қолдамайды — диалог Android-тағы Chrome және iPhone-дағы Safari қолжетімді',btnSettings:'Баптаулар',setTitle:'Баптаулар',setTheme:'Тақырып',setLight:'Ашық',setDark:'Қараңғы',setLang:'Интерфейс тілі',setFont:'Қаріп өлшемі',setFontS:'Кіші',setFontM:'Орташа',setFontL:'Үлкен',setVoice:'Аударма дауысы',voiceAuto:'Жүйелік дауыс',voiceAutoHint:'жүйе таңдайды',voiceNote:'♪ түймесін басып дауысты тыңдаңыз. Таңдалған дауыс сөйлем тілін қолдамаса, жүйелік дауыс қолданылады.',gFemale:'әйел',gMale:'ер',authorLabel:'Авторы',histTitle:'Соңғы аудармалар',histClear:'Тазалау',photoTake:'Фото түсіру',photoGallery:'Галереядан',ocrNote:'Маңдайша, мәзір немесе құжатты суретке түсіріңіз. Мәтін танылып, аударылады. Алғашқы іске қосуда модель (~2–4 МБ) жүктеледі.',ocrRun:'Мәтін танылуда',ocrDone:'Дайын! Мәтін танылды — аударма төменде.',ocrFail:'Фотоны өңдеу сәтсіз аяқталды. Интернетті тексеріп, қайталаңыз.',ocrEmpty:'Мәтін табылмады — жақынырақ және жарығырақ түсіріңіз.',ocrCard:'Танылған мәтін · өңдеуге болады',dlgTitle:'Диалог',dlgRec:'жазылып жатыр',dlgClear:'Диалогты тазалау',netOn:'желіде',netOff:'желісіз',errTranslate:'Аударма сәтсіз аяқталды. Интернетті тексеріп, қайталаңыз.',kbdDone:'Дайын',selTranslate:'Аудару',pasteTitle:'Буферден қойып аудару',secWarnT:'Файл осы компьютерден ашылды',secWarnX:'Сондықтан браузер микрофон мен буферге рұқсатты әр жолы сұрайды, ал диалог бір сөйлемнен жүреді. Файлды HTTPS арқылы орналастырыңыз — сұрақтар жойылып, диалог үздіксіз болады.',secWarnBtn:'Тегін орналастыру',phrases1:'сөйлем',phrases2:'сөйлем',phrases5:'сөйлем',phrases:'сөйлем',lng_ru:'Орыс',lng_en:'Ағылшын',lng_zh:'Қытай',lng_vi:'Вьетнам',lng_th:'Тай',lng_kk:'Қазақ',footApi:'Тегін API: Google Translate + MyMemory (қосалқы) · OCR: Tesseract.js',footAuthor:'Авторы — Николай Ивашикин',footNet:'Интернет қажет · микрофон мен камера HTTPS арқылы жұмыс істейді'}
+};
+function t(k){
+  const d = UI[settings.ui] || UI.ru;
+  if (d[k] !== undefined) return d[k];
+  return UI.ru[k] !== undefined ? UI.ru[k] : k;
+}
+function countText(n){
+  if (settings.ui === 'ru'){
+    const m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return `${n} ${t('phrases1')}`;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return `${n} ${t('phrases2')}`;
+    return `${n} ${t('phrases5')}`;
+  }
+  return `${n} ${t('phrases')}`;
+}
+
+/* ══════════ АВТООПРЕДЕЛЕНИЕ ЯЗЫКА ПО ПИСЬМЕННОСТИ ══════════ */
+function detectLang(text){
+  const kkSpecific = /[әғқңөұүһіӘҒҚҢӨҰҮҺІ]/;
+  const viMarks = /[ăâđêôơưĂÂĐÊÔƠƯạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữự]/;
+  let zh = 0, th = 0, cyr = 0, lat = 0, kk = 0, vi = 0;
+  for (const ch of text){
+    const c = ch.codePointAt(0);
+    if (c >= 0x4E00 && c <= 0x9FFF) zh++;
+    else if (c >= 0x0E00 && c <= 0x0E7F) th++;
+    else if ((c >= 0x0400 && c <= 0x04FF) || (c >= 0x0500 && c <= 0x052F)){
+      cyr++;
+      if (kkSpecific.test(ch)) kk++;
+    } else if ((c >= 0x0041 && c <= 0x005A) || (c >= 0x0061 && c <= 0x007A) ||
+               (c >= 0x00C0 && c <= 0x024F) || (c >= 0x1E00 && c <= 0x1EFF)){
+      lat++;
+      if (viMarks.test(ch)) vi++;
+    }
+  }
+  if (zh > 0 && zh >= cyr && zh >= lat) return 'zh';
+  if (th > 0 && th >= cyr && th >= lat) return 'th';
+  if (cyr > 0 && cyr >= lat) return (kk >= 1 || /[іІ]/.test(text)) ? 'kk' : 'ru';
+  if (lat > 0) return (vi >= 2 || (vi >= 1 && vi / lat > 0.12)) ? 'vi' : 'en';
+  return null;
+}
+
+/* ══════════ КЛАВИАТУРА ══════════ */
+const doneBtn = $('kbdDone');
+const isTextField = el => el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !/hidden|file|checkbox|radio|range/.test(el.type)));
+function refreshDone(){ doneBtn.classList.toggle('show', isTextField(document.activeElement)); }
+function layoutDone(){
+  const vv = window.visualViewport;
+  const kb = vv ? Math.max(0, window.innerHeight - vv.height) : 0;
+  doneBtn.style.setProperty('--kb', kb + 'px');
+}
+document.addEventListener('focusin', ()=>{ refreshDone(); setTimeout(layoutDone, 60); setTimeout(layoutDone, 400); });
+document.addEventListener('focusout', ()=> setTimeout(refreshDone, 60));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', layoutDone);
+window.addEventListener('resize', layoutDone);
+doneBtn.addEventListener('click', blurActive);
+document.addEventListener('pointerdown', e=>{
+  if (e.target.closest('textarea, input, button, label, a, select, .sheet, .kbd-done, .sel-pop, .sel-btn, .secwarn')) return;
+  blurActive();
+});
+
+/* ══════════ СЕТЬ ══════════ */
+function setNet(){
+  const on = navigator.onLine;
+  $('netChip').classList.toggle('off', !on);
+  $('netText').textContent = on ? t('netOn') : t('netOff');
+}
+window.addEventListener('online', setNet);
+window.addEventListener('offline', setNet);
+
+/* ══════════ БАННЕР БЕЗОПАСНОСТИ ══════════ */
+if (LOCAL_FILE){
+  $('secWarn').hidden = false;
+  $('secWarnClose').addEventListener('click', ()=>{ $('secWarn').hidden = true; });
+}
+
+/* ══════════ «ПРИЛИПШИЙ» ЭФФЕКТ ══════════ */
+new IntersectionObserver(([e])=>{
+  $('controls').classList.toggle('stuck', !e.isIntersecting);
+}, { rootMargin:'-9px 0px 0px 0px' }).observe($('sentinel'));
+
+/* ══════════ ВКЛАДКИ ══════════ */
+const tabs = [...document.querySelectorAll('.tab')];
+const panels = { text:$('panel-text'), voice:$('panel-voice'), photo:$('panel-photo') };
+function setMode(mode){
+  tabs.forEach((tEl,i)=>{
+    const on = tEl.dataset.mode === mode;
+    tEl.classList.toggle('active', on);
+    if (on) $('glider').style.transform = `translateX(${i*100}%)`;
+  });
+  Object.entries(panels).forEach(([k,p])=>p.classList.toggle('active', k===mode));
+}
+tabs.forEach(tEl => tEl.addEventListener('click', ()=>{ buzz(8); blurActive(); setMode(tEl.dataset.mode); }));
+
+/* ══════════ БЫСТРЫЕ ФРАЗЫ ══════════ */
+function renderQuick(){
+  const row = $('quickRow');
+  row.innerHTML = '';
+  PHRASES[state.from].forEach((p,i)=>{
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.style.animationDelay = (i*40)+'ms';
+    b.textContent = p;
+    b.addEventListener('click', ()=>{
+      buzz(10);
+      $('srcInput').value = p;
+      autoGrow($('srcInput')); updateCount();
+      doTranslate(p, 'text');
+    });
+    row.appendChild(b);
+  });
+}
+
+/* ══════════ ЯЗЫКОВОЙ ИНТЕРФЕЙС ══════════ */
+function updateLangUI(){
+  const F = LANGS[state.from], T = LANGS[state.to];
+  $('fromName').textContent = F.native;
+  $('toName').textContent   = T.native;
+  $('srcTitle').textContent = F.native;
+  const dst = `${T.native} · ${t('translation')}`;
+  $('dstTitle').textContent = dst;
+  $('pDstTitle').textContent = dst;
+  const gold = state.to === 'ru';
+  ['rcText','rcPhoto'].forEach(id => $(id).classList.toggle('gold', gold));
+  $('voiceHint').textContent = `${t('recog')}: ${F.native} → ${t('translation')}: ${T.native}`;
+  renderQuick();
+}
+function retranslateAll(){
+  const tx = $('srcInput').value.trim();
+  if (tx) doTranslate(tx, 'text');
+  const o = $('ocrText').value.trim();
+  if (o && !$('ocrTextCard').hidden) doTranslate(o, 'photo');
+}
+function pillPop(){
+  [$('fromPill'), $('toPill')].forEach(p=>{
+    p.classList.remove('pop'); void p.offsetWidth; p.classList.add('pop');
+  });
+}
+
+/* ══════════ ОБМЕН ЯЗЫКОВ ══════════ */
+let rot = 0;
+$('swapBtn').addEventListener('click', ()=>{
+  buzz(15);
+  [state.from, state.to] = [state.to, state.from];
+  rot += 180;
+  $('swapBtn').style.setProperty('--rot', rot + 'deg');
+  $('swapBtn').style.transform = `rotate(${rot}deg)`;
+  updateLangUI();
+  pillPop();
+  const inp = $('srcInput');
+  if (state.last.text && state.last.text.txt && inp.value.trim()){
+    inp.value = state.last.text.txt;
+    autoGrow(inp); updateCount();
+    const ic = $('inputCard');
+    ic.classList.remove('flash'); void ic.offsetWidth; ic.classList.add('flash');
+  }
+  if (voiceSession && rec){ try{ rec.stop(); }catch(e){} }
+  retranslateAll();
+});
+
+/* ══════════ ПАНЕЛЬ ВЫБОРА ЯЗЫКА ПЕРЕВОДА ══════════ */
+let sheetWhich = 'from';
+function openSheet(which){
+  blurActive();
+  sheetWhich = which;
+  buzz(8);
+  $('sheetTitle').textContent = which === 'from' ? t('lblFrom') : t('lblTo');
+  const list = $('sheetList');
+  list.innerHTML = '';
+  ORDER.forEach((code,i)=>{
+    const L = LANGS[code];
+    const b = document.createElement('button');
+    b.className = 'lang-row' + (code === state[which] ? ' sel' : '');
+    b.style.animationDelay = (i*35)+'ms';
+    b.innerHTML =
+      `<span class="lang-txt"><span class="lang-native"></span><span class="lang-hint"></span></span>` +
+      `<svg class="check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>`;
+    b.querySelector('.lang-native').textContent = L.native;
+    b.querySelector('.lang-hint').textContent = t('lng_'+code);
+    b.addEventListener('click', ()=> selectLang(code));
+    list.appendChild(b);
+  });
+  $('sheetBackdrop').classList.add('open');
+  $('sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(){
+  $('sheetBackdrop').classList.remove('open');
+  $('sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+$('sheetBackdrop').addEventListener('click', closeSheet);
+$('sheetClose').addEventListener('click', closeSheet);
+$('fromPill').addEventListener('click', ()=> openSheet('from'));
+$('toPill').addEventListener('click', ()=> openSheet('to'));
+function selectLang(code){
+  buzz(12);
+  const changed = code !== state[sheetWhich];
+  if (changed){
+    const other = sheetWhich === 'from' ? 'to' : 'from';
+    if (code === state[other]) state[other] = state[sheetWhich];
+    state[sheetWhich] = code;
+  }
+  closeSheet();
+  updateLangUI();
+  if (changed){
+    pillPop();
+    if (voiceSession && rec){ try{ rec.stop(); }catch(e){} }
+    retranslateAll();
+  }
+}
+
+/* ══════════ ПЕРЕВОД ══════════ */
+async function requestTranslation(text, fromCode, toCode){
+  fromCode = fromCode || state.from;
+  toCode = toCode || state.to;
+  const F = LANGS[fromCode], T = LANGS[toCode];
+  try {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx'
+      + `&sl=${F.gtx}&tl=${T.gtx}&dt=t&q=${encodeURIComponent(text)}`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('gtx');
+    const d = await r.json();
+    const out = d[0].map(s => s[0] || '').join('');
+    if (out) return out;
+    throw new Error('empty');
+  } catch(e){
+    const mm = await fetch('https://api.mymemory.translated.net/get?q='
+      + encodeURIComponent(text.slice(0,480)) + `&langpair=${F.mm}|${T.mm}`);
+    const j = await mm.json();
+    if (j.responseStatus === 200 && j.responseData.translatedText)
+      return j.responseData.translatedText;
+    throw new Error('api');
+  }
+}
+const resultEls = { text:$('resultText'), photo:$('pResult') };
+const resultCards = { text:$('rcText'), photo:$('rcPhoto') };
+const seq = { text:0, photo:0 };
+function showLoading(panel){
+  resultEls[panel].innerHTML = '<span class="dots"><i></i><i></i><i></i></span>';
+}
+function renderResult(panel, text){
+  const el = resultEls[panel];
+  el.innerHTML = '';
+  const span = document.createElement('span');
+  span.className = 'pop-r';
+  span.textContent = text;
+  el.appendChild(span);
+  if (isTextField(document.activeElement))
+    resultCards[panel].scrollIntoView({ block:'nearest', behavior:'smooth' });
+}
+function renderError(panel){
+  resultEls[panel].innerHTML = `<span class="err">${t('errTranslate')}</span>`;
+}
+async function doTranslate(text, panel){
+  if (!text || !text.trim()) return;
+  const id = ++seq[panel];
+  showLoading(panel);
+  try {
+    const res = await requestTranslation(text);
+    if (id !== seq[panel]) return;
+    state.last[panel] = { txt: res, lk: state.to };
+    renderResult(panel, res);
+    addHistory(text, res);
+  } catch(e){
+    if (id !== seq[panel]) return;
+    renderError(panel);
+  }
+}
+
+/* ══════════ ТЕКСТОВЫЙ ВВОД ══════════ */
+function autoGrow(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 260) + 'px';
+}
+function updateCount(){ $('charCount').textContent = $('srcInput').value.length; }
+let tId = null;
+$('srcInput').addEventListener('input', e=>{
+  autoGrow(e.target); updateCount();
+  const v = e.target.value.trim();
+  clearTimeout(tId);
+  if (v.length < 2){
+    if (!v) resultEls.text.innerHTML = `<span class="placeholder">${t('phResult')}</span>`;
+    return;
+  }
+  showLoading('text');
+  tId = setTimeout(()=> doTranslate(v, 'text'), 550);
+});
+$('clearBtn').addEventListener('click', ()=>{
+  buzz(10);
+  $('srcInput').value = '';
+  autoGrow($('srcInput')); updateCount();
+  resultEls.text.innerHTML = `<span class="placeholder">${t('phResult')}</span>`;
+  state.last.text = null;
+  $('srcInput').focus();
+});
+/* вставка из буфера — ТОЛЬКО по нажатию (жест), без автозапросов */
+$('pasteBtn').addEventListener('click', async ()=>{
+  buzz(10);
+  try {
+    const txt = await navigator.clipboard.readText();
+    if (txt && txt.trim()){
+      $('srcInput').value = txt.trim();
+      autoGrow($('srcInput')); updateCount();
+      doTranslate(txt.trim(), 'text');
+      $('srcInput').focus();
+    }
+  } catch(e){ /* нет доступа к буферу — пользователь вставит вручную */ }
+});
+
+/* ══════════ ОЗВУЧИВАНИЕ: надёжный запуск + выбор голоса ══════════ */
+let speakSeq = 0;
+let currentUtterance = null;
+if ('speechSynthesis' in window){
+  speechSynthesis.getVoices();
+}
+function pickVoice(lk){
+  const target = LANGS[lk].speech.toLowerCase();
+  const voices = speechSynthesis.getVoices();
+  if (settings.voice && settings.voice !== 'auto'){
+    const p = voices.find(v => v.name === settings.voice);
+    if (p) return p;
+  }
+  return voices.find(v => v.lang.toLowerCase() === target)
+      || voices.find(v => v.lang.toLowerCase().startsWith(lk))
+      || voices.find(v => v.default)
+      || null;
+}
+function unlockSpeech(){
+  if (!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    speechSynthesis.speak(u);
+    speechSynthesis.resume();
+  }catch(e){}
+}
+document.addEventListener('pointerdown', unlockSpeech, { once:true });
+function speakEntry(txt, lk, opts = {}){
+  if (!('speechSynthesis' in window)){ if (opts.onDone) opts.onDone(); return; }
+  const id = ++speakSeq;
+  speechSynthesis.cancel();
+  speechSynthesis.resume();
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = LANGS[lk].speech;
+  u.rate = 0.95;
+  const v = pickVoice(lk);
+  if (v) u.voice = v;
+  currentUtterance = u;
+  let started = false, finished = false, watchdog = null, hardStop = null;
+  const finish = ()=>{
+    if (finished || id !== speakSeq) return;
+    finished = true;
+    clearTimeout(watchdog); clearTimeout(hardStop);
+    if (opts.btn) opts.btn.classList.remove('done');
+    if (opts.hl)  opts.hl.classList.remove('speaking');
+    if (opts.onDone) opts.onDone();
+  };
+  u.onstart = ()=>{ started = true; };
+  u.onend = finish;
+  u.onerror = finish;
+  watchdog = setTimeout(()=>{
+    if (!started && !finished && id === speakSeq){
+      u.voice = null;
+      try{ speechSynthesis.speak(u); }catch(e){ finish(); }
+    }
+  }, 900);
+  hardStop = setTimeout(()=>{
+    if (!finished && id === speakSeq){
+      try{ speechSynthesis.cancel(); }catch(e){}
+      finish();
+    }
+  }, 25000);
+  if (opts.btn) opts.btn.classList.add('done');
+  if (opts.hl)  opts.hl.classList.add('speaking');
+  try{ speechSynthesis.speak(u); }catch(e){ finish(); }
+}
+$('speakDst').addEventListener('click', e => { const x = state.last.text;  if (x) speakEntry(x.txt, x.lk, { btn: e.currentTarget }); });
+$('pSpeak').addEventListener('click',   e => { const x = state.last.photo; if (x) speakEntry(x.txt, x.lk, { btn: e.currentTarget }); });
+
+/* ══════════ КОПИРОВАНИЕ ══════════ */
+async function copyText(text, btn){
+  if (!text) return;
+  buzz(12);
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  btn.classList.add('done');
+  setTimeout(()=> btn.classList.remove('done'), 1400);
+}
+$('copyDst').addEventListener('click', e => copyText(state.last.text?.txt,  e.currentTarget));
+$('pCopy').addEventListener('click',   e => copyText(state.last.photo?.txt, e.currentTarget));
+$('copyOcr').addEventListener('click', e => copyText($('ocrText').value,    e.currentTarget));
+
+/* ══════════ РЕЧЬ: ДИАЛОГ (в локальном режиме — по одной фразе) ══════════ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false, dictMode = false, dictBase = '';
+let voiceSession = false, restartT = null, phraseCount = 0;
+let speakingPause = false;
+let startSession = ()=>{}, endSession = ()=>{};
+
+function updateFeedCount(){
+  $('feedCount').textContent = countText(phraseCount);
+}
+function setSessionUI(on){
+  $('micBtn').classList.toggle('listening', on);
+  $('voiceCard').classList.toggle('listening', on);
+  $('onAir').hidden = !on;
+  $('micNote').classList.remove('busy');
+  if (on) $('micNote').textContent = t('micListen');
+  else $('micNote').textContent = LOCAL_FILE ? t('micIdleLocal') : t('micIdle');
+}
+
+async function addVoiceEntry(src){
+  let fromL = state.from, toL = state.to;
+  const det = detectLang(src);
+  if (det && det !== fromL){
+    fromL = det;
+    toL = (det === state.to) ? state.from : state.to;
+  }
+  const pair = `${fromL.toUpperCase()}→${toL.toUpperCase()}`;
+  const lk = toL;
+  $('feedEmpty').hidden = true;
+  const div = document.createElement('div');
+  div.className = 'v-entry' + (lk === 'ru' ? ' gold' : '');
+  div.innerHTML =
+    `<div class="v-src"><span class="v-srctext"></span><span class="v-pair">${pair}</span></div>` +
+    `<div class="v-dst"><span class="dots"><i></i><i></i><i></i></span></div>` +
+    `<div class="v-actions">` +
+      `<button class="icon-btn" title="♪">` +
+        `<svg class="ic-main" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 9a4 4 0 0 1 0 6"/></svg>` +
+      `</button>` +
+      `<button class="icon-btn" title="⧉">` +
+        `<svg class="ic-main" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>` +
+        `<svg class="ic-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>` +
+      `</button>` +
+    `</div>`;
+  div.querySelector('.v-srctext').textContent = src;
+  const [spBtn, cpBtn] = div.querySelectorAll('.icon-btn');
+  $('voiceFeed').appendChild(div);
+  div.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  phraseCount++; updateFeedCount();
+  try {
+    const res = await requestTranslation(src, fromL, toL);
+    div.querySelector('.v-dst').textContent = res;
+    spBtn.addEventListener('click', ()=> speakEntry(res, lk, { btn: spBtn, hl: div }));
+    cpBtn.addEventListener('click', ()=> copyText(res, cpBtn));
+    if (voiceSession && rec){
+      speakingPause = true;
+      $('micNote').classList.add('busy');
+      $('micNote').textContent = t('micBusy');
+      try { rec.stop(); } catch(e){}
+    }
+    speakEntry(res, lk, {
+      btn: spBtn, hl: div,
+      onDone: ()=>{
+        speakingPause = false;
+        /* в локальном режиме НЕ перезапускаем автоматически — иначе цикл запросов */
+        if (LOCAL_FILE){
+          if (voiceSession) endSession();
+          return;
+        }
+        if (voiceSession && rec){
+          $('micNote').classList.remove('busy');
+          $('micNote').textContent = t('micListen');
+          rec.lang = LANGS[state.from].speech;
+          try { rec.start(); } catch(e){}
+        }
+      }
+    });
+  } catch(e){
+    div.querySelector('.v-dst').innerHTML = `<span class="err">${t('errTranslate')}</span>`;
+  }
+}
+
+$('feedClear').addEventListener('click', ()=>{
+  buzz(10);
+  $('voiceFeed').innerHTML = '';
+  const p = document.createElement('p');
+  p.className = 'feed-empty'; p.id = 'feedEmpty';
+  p.textContent = SR ? t('phFeed') : t('micNoSRFeed');
+  $('voiceFeed').appendChild(p);
+  phraseCount = 0; updateFeedCount();
+});
+
+if (!SR){
+  $('micBtn').disabled = true;  $('micBtn').style.opacity = .35;
+  $('dictBtn').disabled = true; $('dictBtn').style.opacity = .35;
+  $('micNote').textContent = t('micNoSR');
+  $('feedEmpty').textContent = t('micNoSRFeed');
+} else {
+  rec = new SR();
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  rec.onresult = e => {
+    let interim = '';
+    const finals = [];
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      if (r.isFinal) finals.push(r[0].transcript.trim());
+      else interim += r[0].transcript;
+    }
+    if (dictMode){
+      const base = dictBase ? dictBase + ' ' : '';
+      if (interim) $('srcInput').value = base + interim;
+      finals.forEach(f=>{
+        if (!f) return;
+        $('srcInput').value = base + f;
+        autoGrow($('srcInput')); updateCount();
+        doTranslate($('srcInput').value, 'text');
+      });
+      return;
+    }
+    if (interim){
+      $('liveText').textContent = interim;
+      $('liveText').classList.add('interim');
+    }
+    finals.forEach(f=>{
+      if (!f) return;
+      $('liveText').textContent = f;
+      $('liveText').classList.remove('interim');
+      addVoiceEntry(f);
+    });
+  };
+  rec.onstart = ()=>{
+    listening = true; buzz(20);
+    if (dictMode) $('dictBtn').classList.add('rec');
+  };
+  rec.onend = ()=>{
+    listening = false;
+    if (dictMode){ dictMode = false; dictBase = ''; $('dictBtn').classList.remove('rec'); }
+    /* автоперезапуск ТОЛЬКО в безопасном контексте (https/localhost) */
+    if (!LOCAL_FILE && voiceSession && !speakingPause){
+      clearTimeout(restartT);
+      restartT = setTimeout(()=>{
+        if (!LOCAL_FILE && voiceSession && !speakingPause && !dictMode){
+          rec.lang = LANGS[state.from].speech;
+          try { rec.start(); } catch(e){}
+        }
+      }, 300);
+    }
+  };
+  rec.onerror = e => {
+    if (e.error === 'not-allowed'){
+      endSession();
+      $('micNote').textContent = t('micDenied');
+    } else if (e.error === 'no-speech'){
+      if (voiceSession && !LOCAL_FILE) $('micNote').textContent = t('micNoHear');
+    }
+  };
+  startSession = function(){
+    unlockSpeech();
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    speakingPause = false;
+    voiceSession = true;
+    rec.continuous = !LOCAL_FILE; /* локально — одна фраза за нажатие */
+    rec.lang = LANGS[state.from].speech;
+    setSessionUI(true);
+    try { rec.start(); } catch(e){}
+  };
+  endSession = function(){
+    voiceSession = false;
+    clearTimeout(restartT);
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    setSessionUI(false);
+    try { rec.stop(); } catch(e){}
+  };
+  $('micBtn').addEventListener('click', ()=> voiceSession ? endSession() : startSession());
+  $('dictBtn').addEventListener('click', ()=>{
+    buzz(10);
+    if (listening){ rec.stop(); return; }
+    dictMode = true;
+    rec.continuous = false;
+    dictBase = $('srcInput').value.trim();
+    $('liveText').innerHTML = '';
+    rec.lang = LANGS[state.from].speech;
+    try { rec.start(); } catch(e){}
+  });
+}
+
+/* ══════════ ФОТО: OCR + ПЕРЕВОД (старое фото очищается) ══════════ */
+let lastObjUrl = null;
+function clearPhotoResults(){
+  $('ocrText').value = '';
+  autoGrow($('ocrText'));
+  $('ocrTextCard').hidden = true;
+  state.last.photo = null;
+  resultEls.photo.innerHTML = `<span class="placeholder">${t('phResult')}</span>`;
+}
+function handleImage(file){
+  if (!file) return;
+  buzz(12);
+  if (lastObjUrl) URL.revokeObjectURL(lastObjUrl);
+  lastObjUrl = URL.createObjectURL(file);
+  $('preview').hidden = false;
+  $('previewImg').src = lastObjUrl;
+  clearPhotoResults();
+  runOCR(file);
+}
+$('camInput').addEventListener('change', e => { handleImage(e.target.files[0]); e.target.value=''; });
+$('galInput').addEventListener('change', e => { handleImage(e.target.files[0]); e.target.value=''; });
+$('previewX').addEventListener('click', ()=>{
+  buzz(10);
+  if (lastObjUrl){ URL.revokeObjectURL(lastObjUrl); lastObjUrl = null; }
+  $('preview').hidden = true;
+  $('previewImg').src = '';
+  clearPhotoResults();
+  $('ocrNote').textContent = t('ocrNote');
+});
+async function runOCR(file){
+  const bar = $('ocrBar'), fill = $('ocrFill'), pct = $('ocrPct');
+  bar.hidden = false; fill.style.width = '0%'; pct.textContent = '0%';
+  const langs = state.from === 'ru' ? 'rus+eng' : LANGS[state.from].tess;
+  $('ocrNote').textContent = `${t('ocrRun')} (${t('lng_'+state.from)})…`;
+  try {
+    const worker = await Tesseract.createWorker(langs, 1, {
+      logger: m => {
+        if (m.status === 'recognizing text'){
+          const p = Math.round(m.progress * 100);
+          fill.style.width = p + '%';
+          pct.textContent = p + '%';
+        }
+      }
+    });
+    const { data } = await worker.recognize(file);
+    await worker.terminate();
+    const txt = (data.text || '').trim();
+    setTimeout(()=> bar.hidden = true, 600);
+    if (!txt){
+      $('ocrNote').textContent = t('ocrEmpty');
+      return;
+    }
+    $('ocrTextCard').hidden = false;
+    $('ocrText').value = txt;
+    autoGrow($('ocrText'));
+    $('ocrNote').textContent = t('ocrDone');
+    doTranslate(txt, 'photo');
+  } catch(err){
+    bar.hidden = true;
+    $('ocrNote').textContent = t('ocrFail');
+  }
+}
+let ocrTid = null;
+$('ocrText').addEventListener('input', e=>{
+  autoGrow(e.target);
+  clearTimeout(ocrTid);
+  const v = e.target.value.trim();
+  if (v.length < 2) return;
+  showLoading('photo');
+  ocrTid = setTimeout(()=> doTranslate(v, 'photo'), 700);
+});
+
+/* ══════════ НАСТРОЙКИ ══════════ */
+function applyTheme(){
+  document.documentElement.dataset.theme = settings.theme;
+  $('segTheme').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === settings.theme));
+}
+function applyFont(){
+  document.documentElement.dataset.font = settings.font;
+  $('segFont').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === settings.font));
+}
+$('segTheme').querySelectorAll('button').forEach(b => b.addEventListener('click', ()=>{
+  settings.theme = b.dataset.v; saveSettings(); applyTheme(); buzz(10);
+}));
+$('segFont').querySelectorAll('button').forEach(b => b.addEventListener('click', ()=>{
+  settings.font = b.dataset.v; saveSettings(); applyFont(); buzz(10);
+}));
+
+function buildUiLangList(){
+  const list = $('uiLangList');
+  list.innerHTML = '';
+  ORDER.forEach(code=>{
+    const b = document.createElement('button');
+    b.className = 'lang-row' + (settings.ui === code ? ' sel' : '');
+    b.innerHTML =
+      `<span class="lang-txt"><span class="lang-native"></span><span class="lang-hint"></span></span>` +
+      `<svg class="check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>`;
+    b.querySelector('.lang-native').textContent = LANGS[code].native;
+    b.querySelector('.lang-hint').textContent = t('lng_'+code);
+    b.addEventListener('click', ()=>{
+      settings.ui = code; saveSettings(); applyI18n(); buzz(10);
+    });
+    list.appendChild(b);
+  });
+}
+
+function genderOf(name){
+  if (/female|женск|milena|katya|tatyana|anna|elena|irina|maria|sofia|samantha|victoria|karen|moira|zira|susan|ting|mei|ya-lun|linh|nhi|yuna|siri/i.test(name)) return 'f';
+  if (/male|мужск|pavel|yuri|daniel|thomas|fred|alex|george|david|mark|pattara|dmitry|ivan/i.test(name)) return 'm';
+  return null;
+}
+function buildVoiceList(){
+  const list = $('voiceList');
+  list.innerHTML = '';
+  const mk = (title, hint, val, voiceObj)=>{
+    const row = document.createElement('div');
+    row.className = 'lang-row voice-row' + (settings.voice === val ? ' sel' : '');
+    row.innerHTML =
+      `<span class="lang-txt"><span class="lang-native"></span><span class="lang-hint"></span></span>` +
+      `<button class="icon-btn sm v-preview" title="♪">` +
+        `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15 9a4 4 0 0 1 0 6"/></svg>` +
+      `</button>` +
+      `<svg class="check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>`;
+    row.querySelector('.lang-native').textContent = title;
+    row.querySelector('.lang-hint').textContent = hint;
+    const pv = row.querySelector('.v-preview');
+    pv.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const code = voiceObj ? ORDER.find(c => voiceObj.lang.toLowerCase().startsWith(c)) : settings.ui;
+      const lk = code || 'ru';
+      if ('speechSynthesis' in window){
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(VOICE_SAMPLE[lk] || VOICE_SAMPLE.ru);
+        u.lang = LANGS[lk].speech;
+        if (voiceObj) u.voice = voiceObj;
+        currentUtterance = u;
+        speechSynthesis.speak(u);
+      }
+      buzz(8);
+    });
+    row.addEventListener('click', ()=>{
+      settings.voice = val; saveSettings(); buildVoiceList(); buzz(10);
+    });
+    list.appendChild(row);
+  };
+  mk(t('voiceAuto'), t('voiceAutoHint'), 'auto', null);
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices()
+    .filter(v => ORDER.some(c => v.lang.toLowerCase().startsWith(c)))
+    .sort((a,b)=> a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name));
+  const seen = new Set();
+  voices.forEach(v=>{
+    if (seen.has(v.name)) return;
+    seen.add(v.name);
+    const code = ORDER.find(c => v.lang.toLowerCase().startsWith(c));
+    const g = genderOf(v.name);
+    const hint = t('lng_'+code) + (g ? ' · ' + (g === 'f' ? t('gFemale') : t('gMale')) : '');
+    mk(v.name, hint, v.name, v);
+  });
+}
+if ('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = ()=>{ speechSynthesis.getVoices(); buildVoiceList(); };
+}
+
+function openSettings(){
+  blurActive();
+  buildUiLangList(); buildVoiceList();
+  $('setBackdrop').classList.add('open');
+  $('setSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSettings(){
+  $('setBackdrop').classList.remove('open');
+  $('setSheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+$('gearBtn').addEventListener('click', ()=>{ buzz(8); openSettings(); });
+$('setClose').addEventListener('click', closeSettings);
+$('setBackdrop').addEventListener('click', closeSettings);
+
+/* ══════════ ПРИМЕНЕНИЕ ЯЗЫКА ИНТЕРФЕЙСА ══════════ */
+function applyI18n(){
+  document.documentElement.lang = settings.ui;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  document.title = t('docTitle');
+  $('gearBtn').setAttribute('aria-label', t('btnSettings'));
+  $('feedClear').title = t('dlgClear');
+  $('pasteBtn').title = t('pasteTitle');
+  setNet();
+  updateLangUI();
+  setSessionUI(voiceSession);
+  updateFeedCount();
+  buildUiLangList();
+  const fe = $('feedEmpty');
+  if (!fe.hidden) fe.textContent = SR ? t('phFeed') : t('micNoSRFeed');
+  if ($('ocrTextCard').hidden && $('preview').hidden) $('ocrNote').textContent = t('ocrNote');
+  renderHistory();
+}
+
+/* ══════════ ПЕРЕВОД ВЫДЕЛЕННОГО ТЕКСТА — ТЕЛЕФОН И КОМПЬЮТЕР ══════════ */
+(function(){
+  const selBtn = $('selBtn'), selPop = $('selPop');
+  let selRes = null, selLk = 'en', selT = null;
+  const hideSelAll = ()=>{ selBtn.classList.remove('show'); selPop.classList.remove('show'); };
+  const hideBtn = ()=> selBtn.classList.remove('show');
+
+  function checkSelection(){
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed){ hideBtn(); return; }
+    const txt = sel.toString().trim();
+    if (txt.length < 2 || txt.length > 600){ hideBtn(); return; }
+    const node = sel.anchorNode;
+    const el = node && (node.nodeType === 1 ? node : node.parentElement);
+    if (!el || el.closest('textarea, input, .sel-pop, .sel-btn')){ hideBtn(); return; }
+    let r;
+    try { r = sel.getRangeAt(0).getBoundingClientRect(); } catch(e){ hideBtn(); return; }
+    if (!r || (r.width === 0 && r.height === 0)){ hideBtn(); return; }
+    selBtn.dataset.txt = txt;
+    const btnH = 40;
+    let top = r.bottom + 8;
+    if (top + btnH > innerHeight - 8) top = Math.max(8, r.top - btnH - 8);
+    selBtn.style.top = top + 'px';
+    selBtn.style.left = Math.min(Math.max(r.left + r.width/2, 70), innerWidth - 70) + 'px';
+    selPop.classList.remove('show');
+    selBtn.classList.add('show');
+  }
+
+  document.addEventListener('selectionchange', ()=>{
+    clearTimeout(selT);
+    selT = setTimeout(checkSelection, 120);
+  });
+
+  selBtn.addEventListener('click', async ()=>{
+    const txt = selBtn.dataset.txt || '';
+    const br = selBtn.getBoundingClientRect();
+    hideBtn();
+    if (!txt) return;
+    let fromL = state.from, toL = state.to;
+    const det = detectLang(txt);
+    if (det && det !== fromL){
+      fromL = det;
+      toL = (det === state.to) ? state.from : state.to;
+    }
+    selLk = toL; selRes = null;
+    $('selSrc').textContent = txt;
+    $('selPair').textContent = `${fromL.toUpperCase()}→${toL.toUpperCase()}`;
+    $('selDst').innerHTML = '<span class="dots"><i></i><i></i><i></i></span>';
+    selPop.classList.toggle('gold', toL === 'ru');
+    selPop.style.top = (br.bottom + 8) + 'px';
+    selPop.style.left = Math.min(Math.max(br.left + br.width/2 - 150, 12), innerWidth - 332) + 'px';
+    selPop.classList.add('show');
+    const pr = selPop.getBoundingClientRect();
+    if (pr.bottom > innerHeight - 10) selPop.style.top = Math.max(10, br.top - pr.height - 8) + 'px';
+    try {
+      const res = await requestTranslation(txt, fromL, toL);
+      selRes = res;
+      $('selDst').textContent = res;
+    } catch(e){
+      $('selDst').innerHTML = `<span class="err">${t('errTranslate')}</span>`;
+    }
+  });
+  $('selSpeak').addEventListener('click', e => { if (selRes) speakEntry(selRes, selLk, { btn: e.currentTarget }); });
+  $('selCopy').addEventListener('click',  e => { if (selRes) copyText(selRes, e.currentTarget); });
+  $('selClose').addEventListener('click', hideSelAll);
+  document.addEventListener('pointerdown', e => {
+    if (!e.target.closest('.sel-pop, .sel-btn')) hideSelAll();
+  });
+  window.addEventListener('scroll', hideSelAll, { passive:true });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hideSelAll(); });
+})();
+
+/* ══════════ ИСТОРИЯ ══════════ */
+const HKEY = 'tolmach_history';
+(function migrate(){
+  try {
+    const old = localStorage.getItem('polyglot6_history');
+    if (old && !localStorage.getItem(HKEY)) localStorage.setItem(HKEY, old);
+  } catch(e){}
+})();
+function loadHist(){ try { return JSON.parse(localStorage.getItem(HKEY)) || []; } catch(e){ return []; } }
+function addHistory(src, dst){
+  let h = loadHist();
+  if (h[0] && h[0].s === src.slice(0,120)) return;
+  h.unshift({ s: src.slice(0,120), d: dst.slice(0,180), f: state.from, t: state.to, ts: Date.now() });
+  h = h.slice(0, 8);
+  try { localStorage.setItem(HKEY, JSON.stringify(h)); } catch(e){}
+  renderHistory();
+}
+function renderHistory(){
+  const h = loadHist();
+  const sec = $('historySec');
+  if (!h.length){ sec.hidden = true; return; }
+  sec.hidden = false;
+  $('histList').innerHTML = '';
+  h.forEach((item, i)=>{
+    const div = document.createElement('div');
+    div.className = 'hist-item';
+    div.style.animationDelay = (i*40)+'ms';
+    const pair = `${item.f.toUpperCase()} → ${item.t.toUpperCase()}`;
+    const when = new Date(item.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    div.innerHTML = `<div class="hist-src"></div><div class="hist-dst"></div><div class="hist-meta">${pair} · ${when}</div>`;
+    div.querySelector('.hist-src').textContent = item.s;
+    div.querySelector('.hist-dst').textContent = item.d;
+    div.addEventListener('click', ()=>{
+      buzz(10);
+      state.from = item.f; state.to = item.t;
+      updateLangUI();
+      setMode('text');
+      $('srcInput').value = item.s;
+      autoGrow($('srcInput')); updateCount();
+      doTranslate(item.s, 'text');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    $('histList').appendChild(div);
+  });
+}
+$('histClear').addEventListener('click', ()=>{
+  localStorage.removeItem(HKEY);
+  renderHistory();
+  buzz(10);
+});
+
+/* ══════════ СТАРТ ══════════ */
+applyTheme();
+applyFont();
+buildVoiceList();
+applyI18n();
+updateCount();
+layoutDone();
+</script>
+</body>
+</html>
