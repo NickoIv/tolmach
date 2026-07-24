@@ -31,7 +31,6 @@ body::before{
     radial-gradient(60% 45% at 8% 0%, rgba(15,163,131,.10), transparent 70%),
     radial-gradient(55% 40% at 100% 100%, rgba(242,179,61,.12), transparent 70%);
 }
-/* ---------- ТЁМНАЯ ТЕМА ---------- */
 [data-theme="dark"]{
   --paper:#0B1714; --card:#142A24; --line:rgba(255,255,255,.09);
   --mut:#8CA39A; --tx:#E9F3EE; --ph:#6B8279;
@@ -57,9 +56,7 @@ body::before{
 [data-theme="dark"] .top{box-shadow:0 18px 40px rgba(0,0,0,.45);}
 [data-theme="dark"] .sel-pop{box-shadow:0 18px 44px rgba(0,0,0,.55);}
 [data-theme="dark"] .secwarn{background:linear-gradient(150deg,#3a2a10,#2a1d0a); border-color:rgba(246,196,99,.4);}
-/* ---------- каркас ---------- */
 .app{position:relative; z-index:1; max-width:460px; margin:0 auto; padding:14px 14px 44px;}
-/* ---------- шапка ---------- */
 .top{
   background:linear-gradient(150deg,#1A4038,#0E241F); border-radius:22px;
   padding:16px; color:#fff; position:relative; overflow:hidden;
@@ -92,7 +89,6 @@ body::before{
 .dot{width:7px; height:7px; border-radius:50%; background:#4ADE80; box-shadow:0 0 8px #4ADE80; animation:pulseDot 2s infinite;}
 .net.off .dot{background:#F87171; box-shadow:0 0 8px #F87171;}
 @keyframes pulseDot{0%,100%{transform:scale(1);}50%{transform:scale(.7);}}
-/* ---------- баннер безопасности (только при запуске с диска) ---------- */
 .secwarn{
   margin-top:12px; display:flex; gap:12px; align-items:flex-start;
   background:linear-gradient(150deg,#fff7e6,#fdeecb); border:1px solid rgba(242,179,61,.5);
@@ -115,7 +111,6 @@ body::before{
 .secwarn-a:hover{opacity:.9;}
 .secwarn-a:active{transform:scale(.95);}
 .secwarn-close{flex:0 0 auto; border:0; background:none; color:#9a7320; cursor:pointer; padding:2px; display:grid; place-items:center;}
-/* ---------- липкая панель управления ---------- */
 .sentinel{height:1px;}
 .controls{
   position:sticky; top:8px; z-index:40;
@@ -145,7 +140,6 @@ body::before{
   transition:transform .45s cubic-bezier(.3,.1,.3,1);
 }
 .swap:active{transform:scale(.9) rotate(var(--rot,0deg));}
-/* ---------- вкладки ---------- */
 .tabs{
   position:relative; display:grid; grid-template-columns:repeat(3,1fr);
   background:var(--card); border:1px solid var(--line); border-radius:16px; padding:5px;
@@ -164,7 +158,6 @@ body::before{
   transition:transform .3s cubic-bezier(.4,0,.2,1);
   box-shadow:0 4px 12px rgba(15,36,32,.3);
 }
-/* ---------- панели и карточки ---------- */
 .panel{display:none; margin-top:14px;}
 .panel.active{display:block; animation:rise .35s ease both;}
 @keyframes rise{from{opacity:0; transform:translateY(12px);}to{opacity:1; transform:none;}}
@@ -202,7 +195,6 @@ textarea::placeholder{color:var(--ph);}
 .icon-btn .ic-check{display:none;}
 .icon-btn.done .ic-check{display:block;}
 .icon-btn.done .ic-main{display:none;}
-/* ---------- кнопка «Готово» ---------- */
 .kbd-done{
   position:fixed; left:50%; bottom:14px; z-index:60;
   display:flex; align-items:center; gap:8px;
@@ -218,7 +210,6 @@ textarea::placeholder{color:var(--ph);}
   transform:translate(-50%, 0) translateY(calc(-1 * var(--kb, 0px)));
 }
 @media (hover:hover) and (pointer:fine){ .kbd-done{display:none;} }
-/* ---------- быстрые фразы ---------- */
 .quick{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 6px; margin-bottom:12px; scrollbar-width:none;}
 .quick::-webkit-scrollbar{display:none;}
 .chip{
@@ -227,7 +218,6 @@ textarea::placeholder{color:var(--ph);}
   cursor:pointer; transition:background .2s; animation:rise .3s ease both;
 }
 .chip:hover{border-color:var(--gold); background:var(--gold-soft);}
-/* ---------- результат ---------- */
 .result-card{border-left:5px solid var(--teal); background:linear-gradient(180deg,#fff,#F5FBF8); scroll-margin-top:150px;}
 .result-card.gold{border-left-color:var(--gold); background:linear-gradient(180deg,#fff,#FFFBF1);}
 .result-text{font:600 calc(21px * var(--fs))/1.45 'Golos Text',system-ui,sans-serif; min-height:34px; word-break:break-word;}
@@ -238,7 +228,6 @@ textarea::placeholder{color:var(--ph);}
 .dots i{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal); margin-right:5px; animation:blink 1s infinite;}
 .dots i:nth-child(2){animation-delay:.2s;} .dots i:nth-child(3){animation-delay:.4s;}
 @keyframes blink{0%,100%{opacity:.2; transform:translateY(0);}50%{opacity:1; transform:translateY(-4px);}}
-/* ---------- голос и лента диалога ---------- */
 .voice-card{padding:14px;}
 .live-area{
   background:#F3F8F5; border:1px solid var(--line); border-radius:14px;
@@ -291,7 +280,6 @@ textarea::placeholder{color:var(--ph);}
 .v-dst{font:600 calc(19px * var(--fs))/1.4 'Golos Text',system-ui,sans-serif; margin-top:5px; word-break:break-word;}
 .v-actions{display:flex; gap:6px; margin-top:9px;}
 .v-actions .icon-btn{width:34px; height:34px; border-radius:10px;}
-/* ---------- фото ---------- */
 .photo-btns{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 .big-btn{
   display:flex; flex-direction:column; align-items:center; gap:9px; padding:18px 8px;
@@ -312,7 +300,6 @@ textarea::placeholder{color:var(--ph);}
 .bar{flex:1; height:8px; background:#E2EBE6; border-radius:99px; overflow:hidden;}
 .bar span{display:block; height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--teal),#4CC8A9); transition:width .25s;}
 #ocrPct{font-size:12px; font-weight:700; color:var(--teal); min-width:40px; text-align:right; font-variant-numeric:tabular-nums;}
-/* ---------- панели (язык и настройки) ---------- */
 .sheet-backdrop{
   position:fixed; inset:0; background:rgba(10,25,20,.5); z-index:50;
   opacity:0; pointer-events:none; transition:opacity .3s;
@@ -342,7 +329,6 @@ textarea::placeholder{color:var(--ph);}
 .lang-hint{font-size:12px; color:var(--mut);}
 .lang-row .check{margin-left:auto; color:var(--teal); opacity:0; transition:opacity .2s; flex:0 0 auto;}
 .lang-row.sel .check{opacity:1;}
-/* ---------- настройки ---------- */
 .set-sec{margin:16px 0;}
 .set-label{font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); margin:0 2px 8px;}
 .set-note{font-size:12px; color:var(--mut); margin:8px 2px 0; line-height:1.5;}
@@ -371,7 +357,6 @@ textarea::placeholder{color:var(--ph);}
 .set-a1{font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--mut);}
 .set-a2{font:700 15.5px 'Golos Text'; color:var(--tx); margin-top:1px;}
 .set-a3{font-size:11.5px; color:var(--mut); margin-top:1px;}
-/* ---------- перевод выделенного текста ---------- */
 .sel-btn{
   position:fixed; z-index:65; display:flex; gap:7px; align-items:center;
   background:var(--gold); color:#241A06; border:0; border-radius:999px; padding:9px 16px;
@@ -394,7 +379,6 @@ textarea::placeholder{color:var(--ph);}
 .sel-pair{font-size:10px; font-weight:800; letter-spacing:.12em; color:var(--mut);}
 .sel-src{font-size:calc(13.5px * var(--fs)); color:var(--mut); margin-bottom:5px;}
 .sel-dst{font:600 calc(17px * var(--fs))/1.4 'Golos Text',system-ui,sans-serif; color:var(--tx); word-break:break-word;}
-/* ---------- история ---------- */
 .hist-head{display:flex; justify-content:space-between; align-items:baseline; margin:20px 2px 10px;}
 .hist-head h2{font-family:'Unbounded'; font-size:15px; font-weight:600; letter-spacing:.04em; margin:0; color:var(--tx);}
 #histClear{border:0; background:none; color:var(--mut); font:500 12.5px 'Golos Text'; cursor:pointer; text-decoration:underline dotted; padding:4px;}
@@ -440,7 +424,6 @@ textarea::placeholder{color:var(--ph);}
     </div>
   </header>
 
-  <!-- БАННЕР: только при запуске файла с диска -->
   <div class="secwarn" id="secWarn" hidden>
     <div class="secwarn-ic" aria-hidden="true">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -491,7 +474,6 @@ textarea::placeholder{color:var(--ph);}
     </nav>
   </div>
 
-  <!-- ═══ ТЕКСТ ═══ -->
   <section class="panel active" id="panel-text">
     <div class="card input-card" id="inputCard">
       <div class="card-head">
@@ -531,7 +513,6 @@ textarea::placeholder{color:var(--ph);}
     </div>
   </section>
 
-  <!-- ═══ ГОЛОС ═══ -->
   <section class="panel" id="panel-voice">
     <div class="card voice-card" id="voiceCard">
       <div class="live-area">
@@ -565,7 +546,6 @@ textarea::placeholder{color:var(--ph);}
     </div>
   </section>
 
-  <!-- ═══ ФОТО ═══ -->
   <section class="panel" id="panel-photo">
     <div class="card">
       <div class="photo-btns">
@@ -637,7 +617,6 @@ textarea::placeholder{color:var(--ph);}
   </footer>
 </main>
 
-<!-- ПЕРЕВОД ВЫДЕЛЕННОГО ТЕКСТА (ТЕЛЕФОН И КОМПЬЮТЕР) -->
 <button class="sel-btn" id="selBtn">
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
   <span data-i18n="selTranslate">Перевести</span>
@@ -667,7 +646,6 @@ textarea::placeholder{color:var(--ph);}
   <span data-i18n="kbdDone">Готово</span>
 </button>
 
-<!-- ПАНЕЛЬ ВЫБОРА ЯЗЫКА -->
 <div class="sheet-backdrop" id="sheetBackdrop"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
   <div class="sheet-handle" aria-hidden="true"></div>
@@ -678,7 +656,6 @@ textarea::placeholder{color:var(--ph);}
   <div id="sheetList"></div>
 </div>
 
-<!-- НАСТРОЙКИ -->
 <div class="sheet-backdrop" id="setBackdrop"></div>
 <div class="sheet" id="setSheet" role="dialog" aria-modal="true">
   <div class="sheet-handle" aria-hidden="true"></div>
@@ -726,11 +703,12 @@ textarea::placeholder{color:var(--ph);}
     <div>
       <div class="set-a1" data-i18n="authorLabel">Автор</div>
       <div class="set-a2">Ивашикин Николай</div>
-      <div class="set-a3">Толмач · v3.5</div>
+      <div class="set-a3">Толмач · v3.6</div>
     </div>
   </div>
 </div>
-
+<!-- ===== ЧАСТЬ 1/4: КОНЕЦ ===== -->
+<!-- ===== ЧАСТЬ 2/4: НАЧАЛО ===== -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script>
 'use strict';
@@ -738,10 +716,8 @@ const $ = id => document.getElementById(id);
 const buzz = ms => { if (navigator.vibrate) navigator.vibrate(ms); };
 const blurActive = ()=>{ const a = document.activeElement; if (a && /TEXTAREA|INPUT/.test(a.tagName)) a.blur(); };
 
-/* файл открыт с диска (file://) — не безопасный контекст для микрофона/буфера */
 const LOCAL_FILE = (location.protocol === 'file:');
 
-/* ══════════ ЯЗЫКИ ══════════ */
 const LANGS = {
   ru:{ native:'Русский',    gtx:'ru',    mm:'ru',    speech:'ru-RU', tess:'rus' },
   en:{ native:'English',    gtx:'en',    mm:'en',    speech:'en-US', tess:'eng' },
@@ -750,7 +726,7 @@ const LANGS = {
   th:{ native:'ไทย',         gtx:'th',    mm:'th',    speech:'th-TH', tess:'tha' },
   kk:{ native:'Қазақша',    gtx:'kk',    mm:'kk',    speech:'kk-KZ', tess:'kaz' },
 };
-const ORDER = ['ru','en','zh','vi','th','kk'];
+const ORDER = ['ru','en','kk','zh','vi','th'];
 const PHRASES = {
   ru:['Здравствуйте','Сколько это стоит?','Где вокзал?','Мне нужна помощь','Спасибо большое'],
   en:['Hello','How much is it?','Where is the station?','I need help','Thank you very much'],
@@ -769,18 +745,18 @@ const VOICE_SAMPLE = {
 };
 const state = { from:'ru', to:'en', last:{ text:null, photo:null } };
 
-/* ══════════ НАСТРОЙКИ (сохраняются) ══════════ */
 const SETTINGS_KEY = 'tolmach_settings';
 let settings = { theme:'light', ui:'ru', font:'m', voice:'auto' };
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}); } catch(e){}
 function saveSettings(){ try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e){} }
 
-/* ══════════ ПЕРЕВОД ИНТЕРФЕЙСА (6 языков) ══════════ */
 const UI = {
 ru:{docTitle:'Толмач — голосовой переводчик: русский, английский, китайский, вьетнамский, тайский, казахский',tag:'голос · текст · фото — 6 языков',tabText:'Текст',tabVoice:'Голос',tabPhoto:'Фото',lblFrom:'Исходный',lblTo:'Перевод на',translation:'перевод',recog:'Распознавание',phInput:'Введите текст или надиктуйте — перевод появится сразу…',phResult:'Перевод появится здесь',phLive:'Здесь появится распознанный текст',phFeed:'Нажмите на микрофон и говорите на любом из шести языков — язык определится автоматически, фраза появится текстом и прозвучит переводом',micIdle:'Нажмите — и говорите. Язык определится сам, перевод прозвучит вслух',micIdleLocal:'Нажмите и скажите фразу — перевод прозвучит. Для следующей фразы нажмите снова',micListen:'Слушаю… нажмите, чтобы остановиться',micBusy:'Озвучиваю перевод…',micNoHear:'Не расслышал — продолжаю слушать',micDenied:'Доступ к микрофону запрещён — разрешите в настройках браузера',micNoSR:'Браузер не поддерживает распознавание речи — используйте ввод текста',micNoSRFeed:'Браузер не поддерживает распознавание речи — диалог доступен в Chrome на Android и в Safari на iPhone',btnSettings:'Настройки',setTitle:'Настройки',setTheme:'Тема',setLight:'Светлая',setDark:'Тёмная',setLang:'Язык интерфейса',setFont:'Размер шрифта',setFontS:'Маленький',setFontM:'Средний',setFontL:'Крупный',setVoice:'Голос перевода',voiceAuto:'Системный голос',voiceAutoHint:'на усмотрение системы',voiceNote:'Нажмите ♪, чтобы прослушать голос. Если выбранный голос не поддерживает язык фразы, будет использован системный.',gFemale:'женский',gMale:'мужской',authorLabel:'Автор',histTitle:'Недавние переводы',histClear:'Очистить',photoTake:'Снять фото',photoGallery:'Из галереи',ocrNote:'Сфотографируйте вывеску, меню или документ. Текст распознаётся на исходном языке и переведётся. При первом запуске загружается модель (~2–4 МБ).',ocrRun:'Распознаём текст',ocrDone:'Готово! Текст распознан — перевод ниже.',ocrFail:'Не удалось обработать фото. Проверьте интернет и попробуйте снова.',ocrEmpty:'Текст не найден — сделайте фото крупнее и светлее.',ocrCard:'Распознанный текст · можно править',dlgTitle:'Диалог',dlgRec:'идёт запись',dlgClear:'Очистить диалог',netOn:'онлайн',netOff:'офлайн',errTranslate:'Не удалось перевести. Проверьте интернет и попробуйте ещё раз.',kbdDone:'Готово',selTranslate:'Перевести',pasteTitle:'Вставить из буфера и перевести',secWarnT:'Файл открыт с компьютера',secWarnX:'Поэтому браузер каждый раз спрашивает разрешения на микрофон и буфер, а диалог идёт по одной фразе. Разместите файл по HTTPS — запросы исчезнут, диалог станет непрерывным.',secWarnBtn:'Разместить бесплатно',phrases1:'фраза',phrases2:'фразы',phrases5:'фраз',lng_ru:'Русский',lng_en:'Английский',lng_zh:'Китайский',lng_vi:'Вьетнамский',lng_th:'Тайский',lng_kk:'Казахский',footApi:'Бесплатные публичные API: Google Translate + MyMemory (резерв) · OCR: Tesseract.js',footAuthor:'Автор — Ивашикин Николай',footNet:'Нужен интернет · микрофон и камера доступны по HTTPS'},
 en:{docTitle:'Tolmach — voice translator: Russian, English, Chinese, Vietnamese, Thai, Kazakh',tag:'voice · text · photo — 6 languages',tabText:'Text',tabVoice:'Voice',tabPhoto:'Photo',lblFrom:'From',lblTo:'Translate to',translation:'translation',recog:'Recognition',phInput:'Type or dictate — the translation appears instantly…',phResult:'The translation will appear here',phLive:'Recognized text will appear here',phFeed:'Tap the mic and speak any of the six languages — the language is detected automatically, the phrase appears as text and the translation is spoken aloud',micIdle:'Tap and speak. The language is auto-detected, the translation is spoken aloud',micIdleLocal:'Tap and say a phrase — the translation is spoken. Tap again for the next phrase',micListen:'Listening… tap to stop',micBusy:'Speaking the translation…',micNoHear:"Didn't catch that — still listening",micDenied:'Microphone access denied — allow it in the browser settings',micNoSR:'This browser does not support speech recognition — use the Text tab',micNoSRFeed:'This browser does not support speech recognition — the dialog works in Chrome on Android and Safari on iPhone',btnSettings:'Settings',setTitle:'Settings',setTheme:'Theme',setLight:'Light',setDark:'Dark',setLang:'Interface language',setFont:'Font size',setFontS:'Small',setFontM:'Medium',setFontL:'Large',setVoice:'Translation voice',voiceAuto:'System voice',voiceAutoHint:'chosen by the system',voiceNote:'Tap ♪ to preview a voice. If the chosen voice does not support the phrase language, the system voice is used.',gFemale:'female',gMale:'male',authorLabel:'Author',histTitle:'Recent translations',histClear:'Clear',photoTake:'Take a photo',photoGallery:'From gallery',ocrNote:'Photograph a sign, menu or document. The text is recognized and translated. The model (~2–4 MB) loads on first run.',ocrRun:'Recognizing text',ocrDone:'Done! Text recognized — translation below.',ocrFail:'Could not process the photo. Check your internet connection and try again.',ocrEmpty:'No text found — take a closer and brighter photo.',ocrCard:'Recognized text · editable',dlgTitle:'Dialog',dlgRec:'recording',dlgClear:'Clear dialog',netOn:'online',netOff:'offline',errTranslate:'Translation failed. Check your internet connection and try again.',kbdDone:'Done',selTranslate:'Translate',pasteTitle:'Paste from clipboard and translate',secWarnT:'File opened from this computer',secWarnX:'That is why the browser keeps asking for microphone and clipboard access, and the dialog runs one phrase at a time. Host the file over HTTPS — the prompts disappear and the dialog becomes continuous.',secWarnBtn:'Host for free',phrases1:'phrase',phrases2:'phrases',phrases5:'phrases',phrases:'phrases',lng_ru:'Russian',lng_en:'English',lng_zh:'Chinese',lng_vi:'Vietnamese',lng_th:'Thai',lng_kk:'Kazakh',footApi:'Free public APIs: Google Translate + MyMemory (backup) · OCR: Tesseract.js',footAuthor:'Author — Nikolai Ivashkin',footNet:'Internet required · microphone and camera need HTTPS'},
 zh:{docTitle:'Tolmach — 语音翻译:俄语、英语、中文、越南语、泰语、哈萨克语',tag:'语音 · 文字 · 照片 — 6种语言',tabText:'文字',tabVoice:'语音',tabPhoto:'照片',lblFrom:'源语言',lblTo:'翻译为',translation:'翻译',recog:'识别',phInput:'输入或口述 — 翻译立即显示…',phResult:'翻译将显示在这里',phLive:'识别的文本将显示在这里',phFeed:'点击麦克风,用六种语言中的任意一种说话 — 自动识别语言,句子以文字显示并朗读翻译',micIdle:'点击即可说话。自动识别语言,翻译会朗读出来',micIdleLocal:'点击并说一句话 — 翻译会朗读。下一句请再次点击',micListen:'正在聆听…点击停止',micBusy:'正在朗读翻译…',micNoHear:'没听清 — 继续聆听',micDenied:'麦克风访问被拒绝 — 请在浏览器设置中允许',micNoSR:'浏览器不支持语音识别 — 请使用"文字"标签',micNoSRFeed:'浏览器不支持语音识别 — 对话功能适用于 Android 版 Chrome 和 iPhone 版 Safari',btnSettings:'设置',setTitle:'设置',setTheme:'主题',setLight:'浅色',setDark:'深色',setLang:'界面语言',setFont:'字体大小',setFontS:'小',setFontM:'中',setFontL:'大',setVoice:'翻译语音',voiceAuto:'系统语音',voiceAutoHint:'由系统选择',voiceNote:'点击 ♪ 试听语音。若所选语音不支持该短语语言,将使用系统语音。',gFemale:'女声',gMale:'男声',authorLabel:'作者',histTitle:'最近翻译',histClear:'清除',photoTake:'拍照',photoGallery:'从相册',ocrNote:'拍摄招牌、菜单或文件。文本将按源语言识别并翻译。首次运行时加载模型(约2–4 MB)。',ocrRun:'正在识别文本',ocrDone:'完成!文本已识别 — 翻译如下。',ocrFail:'无法处理照片。请检查网络后重试。',ocrEmpty:'未找到文字 — 请靠近一点,在明亮处重拍。',ocrCard:'识别的文本 · 可编辑',dlgTitle:'对话',dlgRec:'录音中',dlgClear:'清除对话',netOn:'在线',netOff:'离线',errTranslate:'翻译失败。请检查网络后重试。',kbdDone:'完成',selTranslate:'翻译',pasteTitle:'从剪贴板粘贴并翻译',secWarnT:'文件从本机打开',secWarnX:'因此浏览器每次都会询问麦克风和剪贴板权限,且对话逐句进行。请通过 HTTPS 托管文件 — 提示将消失,对话将连续进行。',secWarnBtn:'免费托管',phrases1:'句',phrases2:'句',phrases5:'句',phrases:'句',lng_ru:'俄语',lng_en:'英语',lng_zh:'中文',lng_vi:'越南语',lng_th:'泰语',lng_kk:'哈萨克语',footApi:'免费公共 API:Google Translate + MyMemory(备用) · OCR:Tesseract.js',footAuthor:'作者 — Nikolai Ivashkin',footNet:'需要网络 · 麦克风和摄像头需 HTTPS'},
 vi:{docTitle:'Tolmach — phiên dịch giọng nói: Nga, Anh, Trung, Việt, Thái, Kazakh',tag:'giọng nói · văn bản · ảnh — 6 ngôn ngữ',tabText:'Văn bản',tabVoice:'Giọng nói',tabPhoto:'Ảnh',lblFrom:'Từ',lblTo:'Dịch sang',translation:'bản dịch',recog:'Nhận dạng',phInput:'Nhập hoặc đọc — bản dịch hiện ra ngay…',phResult:'Bản dịch sẽ hiện ở đây',phLive:'Văn bản nhận dạng sẽ hiện ở đây',phFeed:'Nhấn micrô và nói bằng bất kỳ ngôn ngữ nào trong sáu ngôn ngữ — ngôn ngữ được nhận dạng tự động, câu hiện dạng văn bản và bản dịch được đọc to',micIdle:'Nhấn và nói. Ngôn ngữ tự nhận dạng, bản dịch được đọc to',micIdleLocal:'Nhấn và nói một câu — bản dịch được đọc to. Nhấn lại cho câu tiếp theo',micListen:'Đang nghe… nhấn để dừng',micBusy:'Đang đọc bản dịch…',micNoHear:'Chưa nghe rõ — vẫn đang nghe',micDenied:'Truy cập micrô bị từ chối — hãy cho phép trong cài đặt trình duyệt',micNoSR:'Trình duyệt không hỗ trợ nhận dạng giọng nói — hãy dùng tab Văn bản',micNoSRFeed:'Trình duyệt không hỗ trợ nhận dạng giọng nói — hội thoại khả dụng trên Chrome cho Android và Safari cho iPhone',btnSettings:'Cài đặt',setTitle:'Cài đặt',setTheme:'Giao diện',setLight:'Sáng',setDark:'Tối',setLang:'Ngôn ngữ giao diện',setFont:'Cỡ chữ',setFontS:'Nhỏ',setFontM:'Vừa',setFontL:'Lớn',setVoice:'Giọng đọc bản dịch',voiceAuto:'Giọng hệ thống',voiceAutoHint:'do hệ thống chọn',voiceNote:'Nhấn ♪ để nghe thử. Nếu giọng đã chọn không hỗ trợ ngôn ngữ của câu, sẽ dùng giọng hệ thống.',gFemale:'nữ',gMale:'nam',authorLabel:'Tác giả',histTitle:'Bản dịch gần đây',histClear:'Xóa',photoTake:'Chụp ảnh',photoGallery:'Từ thư viện',ocrNote:'Chụp biển hiệu, thực đơn hoặc tài liệu. Văn bản được nhận dạng và dịch. Mô hình (~2–4 MB) tải ở lần dùng đầu.',ocrRun:'Đang nhận dạng văn bản',ocrDone:'Xong! Đã nhận dạng văn bản — bản dịch bên dưới.',ocrFail:'Không thể xử lý ảnh. Kiểm tra mạng và thử lại.',ocrEmpty:'Không tìm thấy chữ — hãy chụp gần hơn và sáng hơn.',ocrCard:'Văn bản nhận dạng · có thể sửa',dlgTitle:'Hội thoại',dlgRec:'đang ghi',dlgClear:'Xóa hội thoại',netOn:'trực tuyến',netOff:'ngoại tuyến',errTranslate:'Không thể dịch. Kiểm tra mạng và thử lại.',kbdDone:'Xong',selTranslate:'Dịch',pasteTitle:'Dán từ clipboard và dịch',secWarnT:'Tệp được mở từ máy này',secWarnX:'Vì vậy trình duyệt liên tục hỏi quyền micrô và clipboard, và hội thoại chạy từng câu. Hãy lưu trữ tệp qua HTTPS — các lời nhắc sẽ biến mất và hội thoại trở nên liên tục.',secWarnBtn:'Lưu trữ miễn phí',phrases1:'câu',phrases2:'câu',phrases5:'câu',phrases:'câu',lng_ru:'Tiếng Nga',lng_en:'Tiếng Anh',lng_zh:'Tiếng Trung',lng_vi:'Tiếng Việt',lng_th:'Tiếng Thái',lng_kk:'Tiếng Kazakh',footApi:'API công cộng miễn phí: Google Translate + MyMemory (dự phòng) · OCR: Tesseract.js',footAuthor:'Tác giả — Nikolai Ivashkin',footNet:'Cần mạng · micrô và máy ảnh cần HTTPS'},
+// ===== ЧАСТЬ 2/4: КОНЕЦ (словарь продолжится в части 3) =====
+// ===== ЧАСТЬ 3/4: НАЧАЛО (продолжение словаря) =====
 th:{docTitle:'Tolmach — โปรแกรมแปลเสียง: รัสเซีย อังกฤษ จีน เวียดนาม ไทย คาซัค',tag:'เสียง · ข้อความ · ภาพถ่าย — 6 ภาษา',tabText:'ข้อความ',tabVoice:'เสียง',tabPhoto:'ภาพถ่าย',lblFrom:'จาก',lblTo:'แปลเป็น',translation:'คำแปล',recog:'การรู้จำ',phInput:'พิมพ์หรือพูด — คำแปลแสดงทันที…',phResult:'คำแปลจะแสดงที่นี่',phLive:'ข้อความที่รู้จำจะแสดงที่นี่',phFeed:'แตะไมโครโฟนแล้วพูดภาษาใดก็ได้ในหกภาษา — ระบบตรวจจับภาษาอัตโนมัติ ข้อความจะแสดงและอ่านคำแปลออกเสียง',micIdle:'แตะแล้วพูดได้เลย ระบบตรวจจับภาษาอัตโนมัติและอ่านคำแปลออกเสียง',micIdleLocal:'แตะแล้วพูดหนึ่งประโยค — คำแปลจะออกเสียง แตะอีกครั้งสำหรับประโยคถัดไป',micListen:'กำลังฟัง… แตะเพื่อหยุด',micBusy:'กำลังอ่านคำแปล…',micNoHear:'ไม่ได้ยิน — ยังฟังอยู่',micDenied:'การเข้าถึงไมโครโฟนถูกปฏิเสธ — โปรดอนุญาตในการตั้งค่าเบราว์เซอร์',micNoSR:'เบราว์เซอร์ไม่รองรับการรู้จำเสียง — ใช้แท็บข้อความ',micNoSRFeed:'เบราว์เซอร์ไม่รองรับการรู้จำเสียง — บทสนทนาใช้ได้บน Chrome สำหรับ Android และ Safari สำหรับ iPhone',btnSettings:'การตั้งค่า',setTitle:'การตั้งค่า',setTheme:'ธีม',setLight:'สว่าง',setDark:'มืด',setLang:'ภาษาอินเทอร์เฟซ',setFont:'ขนาดตัวอักษร',setFontS:'เล็ก',setFontM:'กลาง',setFontL:'ใหญ่',setVoice:'เสียงอ่านคำแปล',voiceAuto:'เสียงระบบ',voiceAutoHint:'ระบบเลือกให้',voiceNote:'แตะ ♪ เพื่อฟังตัวอย่าง หากเสียงที่เลือกไม่รองรับภาษาของประโยค จะใช้เสียงระบบ',gFemale:'หญิง',gMale:'ชาย',authorLabel:'ผู้เขียน',histTitle:'คำแปลล่าสุด',histClear:'ล้าง',photoTake:'ถ่ายภาพ',photoGallery:'จากแกลเลอรี',ocrNote:'ถ่ายภาพป้าย เมนู หรือเอกสาร ข้อความจะถูกรู้จำและแปล โมเดล (~2–4 MB) โหลดในการใช้ครั้งแรก',ocrRun:'กำลังรู้จำข้อความ',ocrDone:'เสร็จสิ้น! รู้จำข้อความแล้ว — คำแปลด้านล่าง',ocrFail:'ไม่สามารถประมวลผลภาพ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',ocrEmpty:'ไม่พบข้อความ — ถ่ายให้ใกล้ขึ้นและสว่างขึ้น',ocrCard:'ข้อความที่รู้จำ · แก้ไขได้',dlgTitle:'บทสนทนา',dlgRec:'กำลังบันทึก',dlgClear:'ล้างบทสนทนา',netOn:'ออนไลน์',netOff:'ออฟไลน์',errTranslate:'แปลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',kbdDone:'เสร็จ',selTranslate:'แปล',pasteTitle:'วางจากคลิปบอร์ดและแปล',secWarnT:'เปิดไฟล์จากเครื่องนี้',secWarnX:'ดังนั้นเบราว์เซอร์จึงถามสิทธิ์ไมโครโฟนและคลิปบอร์ดทุกครั้ง และบทสนทนาทำงานทีละประโยค กรุณาโฮสต์ไฟล์ผ่าน HTTPS — คำเตือนจะหายไปและบทสนทนาจะต่อเนื่อง',secWarnBtn:'โฮสต์ฟรี',phrases1:'ประโยค',phrases2:'ประโยค',phrases5:'ประโยค',phrases:'ประโยค',lng_ru:'รัสเซีย',lng_en:'อังกฤษ',lng_zh:'จีน',lng_vi:'เวียดนาม',lng_th:'ไทย',lng_kk:'คาซัค',footApi:'API สาธารณะฟรี: Google Translate + MyMemory (สำรอง) · OCR: Tesseract.js',footAuthor:'ผู้เขียน — Nikolai Ivashkin',footNet:'ต้องใช้อินเทอร์เน็ต · ไมโครโฟนและกล้องต้อง HTTPS'},
 kk:{docTitle:'Толмач — дауыстық аудармашы: орыс, ағылшын, қытай, вьетнам, тай, қазақ',tag:'дауыс · мәтін · фото — 6 тіл',tabText:'Мәтін',tabVoice:'Дауыс',tabPhoto:'Фото',lblFrom:'Бастапқы',lblTo:'Аударма тілі',translation:'аударма',recog:'Тану',phInput:'Мәтінді жазыңыз немесе айтыңыз — аударма бірден шығады…',phResult:'Аударма осында шығады',phLive:'Танылған мәтін осында шығады',phFeed:'Микрофонды басып, алты тілдің кез келгенінде сөйлеңіз — тіл автоматты анықталады, сөйлем мәтін түрінде шығып, аудармасы дауысталады',micIdle:'Басыңыз да сөйлеңіз. Тіл автоматты анықталады, аударма дыбысталады',micIdleLocal:'Басып сөйлем айтыңыз — аударма дыбысталады. Келесі сөйлем үшін қайта басыңыз',micListen:'Тыңдап тұрмын… тоқтату үшін басыңыз',micBusy:'Аударманы дыбыстап жатырмын…',micNoHear:'Естімедім — тыңдауды жалғастырудамын',micDenied:'Микрофонға рұқсат жоқ — браузер баптауларынан рұқсат етіңіз',micNoSR:'Браузер дауысты тануды қолдамайды — «Мәтін» қойындысын қолданыңыз',micNoSRFeed:'Браузер дауысты тануды қолдамайды — диалог Android-тағы Chrome және iPhone-дағы Safari қолжетімді',btnSettings:'Баптаулар',setTitle:'Баптаулар',setTheme:'Тақырып',setLight:'Ашық',setDark:'Қараңғы',setLang:'Интерфейс тілі',setFont:'Қаріп өлшемі',setFontS:'Кіші',setFontM:'Орташа',setFontL:'Үлкен',setVoice:'Аударма дауысы',voiceAuto:'Жүйелік дауыс',voiceAutoHint:'жүйе таңдайды',voiceNote:'♪ түймесін басып дауысты тыңдаңыз. Таңдалған дауыс сөйлем тілін қолдамаса, жүйелік дауыс қолданылады.',gFemale:'әйел',gMale:'ер',authorLabel:'Авторы',histTitle:'Соңғы аудармалар',histClear:'Тазалау',photoTake:'Фото түсіру',photoGallery:'Галереядан',ocrNote:'Маңдайша, мәзір немесе құжатты суретке түсіріңіз. Мәтін танылып, аударылады. Алғашқы іске қосуда модель (~2–4 МБ) жүктеледі.',ocrRun:'Мәтін танылуда',ocrDone:'Дайын! Мәтін танылды — аударма төменде.',ocrFail:'Фотоны өңдеу сәтсіз аяқталды. Интернетті тексеріп, қайталаңыз.',ocrEmpty:'Мәтін табылмады — жақынырақ және жарығырақ түсіріңіз.',ocrCard:'Танылған мәтін · өңдеуге болады',dlgTitle:'Диалог',dlgRec:'жазылып жатыр',dlgClear:'Диалогты тазалау',netOn:'желіде',netOff:'желісіз',errTranslate:'Аударма сәтсіз аяқталды. Интернетті тексеріп, қайталаңыз.',kbdDone:'Дайын',selTranslate:'Аудару',pasteTitle:'Буферден қойып аудару',secWarnT:'Файл осы компьютерден ашылды',secWarnX:'Сондықтан браузер микрофон мен буферге рұқсатты әр жолы сұрайды, ал диалог бір сөйлемнен жүреді. Файлды HTTPS арқылы орналастырыңыз — сұрақтар жойылып, диалог үздіксіз болады.',secWarnBtn:'Тегін орналастыру',phrases1:'сөйлем',phrases2:'сөйлем',phrases5:'сөйлем',phrases:'сөйлем',lng_ru:'Орыс',lng_en:'Ағылшын',lng_zh:'Қытай',lng_vi:'Вьетнам',lng_th:'Тай',lng_kk:'Қазақ',footApi:'Тегін API: Google Translate + MyMemory (қосалқы) · OCR: Tesseract.js',footAuthor:'Авторы — Николай Ивашикин',footNet:'Интернет қажет · микрофон мен камера HTTPS арқылы жұмыс істейді'}
 };
@@ -799,7 +775,6 @@ function countText(n){
   return `${n} ${t('phrases')}`;
 }
 
-/* ══════════ АВТООПРЕДЕЛЕНИЕ ЯЗЫКА ПО ПИСЬМЕННОСТИ ══════════ */
 function detectLang(text){
   const kkSpecific = /[әғқңөұүһіӘҒҚҢӨҰҮҺІ]/;
   const viMarks = /[ăâđêôơưĂÂĐÊÔƠƯạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữự]/;
@@ -824,7 +799,6 @@ function detectLang(text){
   return null;
 }
 
-/* ══════════ КЛАВИАТУРА ══════════ */
 const doneBtn = $('kbdDone');
 const isTextField = el => el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !/hidden|file|checkbox|radio|range/.test(el.type)));
 function refreshDone(){ doneBtn.classList.toggle('show', isTextField(document.activeElement)); }
@@ -843,7 +817,6 @@ document.addEventListener('pointerdown', e=>{
   blurActive();
 });
 
-/* ══════════ СЕТЬ ══════════ */
 function setNet(){
   const on = navigator.onLine;
   $('netChip').classList.toggle('off', !on);
@@ -852,18 +825,15 @@ function setNet(){
 window.addEventListener('online', setNet);
 window.addEventListener('offline', setNet);
 
-/* ══════════ БАННЕР БЕЗОПАСНОСТИ ══════════ */
 if (LOCAL_FILE){
   $('secWarn').hidden = false;
   $('secWarnClose').addEventListener('click', ()=>{ $('secWarn').hidden = true; });
 }
 
-/* ══════════ «ПРИЛИПШИЙ» ЭФФЕКТ ══════════ */
 new IntersectionObserver(([e])=>{
   $('controls').classList.toggle('stuck', !e.isIntersecting);
 }, { rootMargin:'-9px 0px 0px 0px' }).observe($('sentinel'));
 
-/* ══════════ ВКЛАДКИ ══════════ */
 const tabs = [...document.querySelectorAll('.tab')];
 const panels = { text:$('panel-text'), voice:$('panel-voice'), photo:$('panel-photo') };
 function setMode(mode){
@@ -876,7 +846,6 @@ function setMode(mode){
 }
 tabs.forEach(tEl => tEl.addEventListener('click', ()=>{ buzz(8); blurActive(); setMode(tEl.dataset.mode); }));
 
-/* ══════════ БЫСТРЫЕ ФРАЗЫ ══════════ */
 function renderQuick(){
   const row = $('quickRow');
   row.innerHTML = '';
@@ -895,7 +864,6 @@ function renderQuick(){
   });
 }
 
-/* ══════════ ЯЗЫКОВОЙ ИНТЕРФЕЙС ══════════ */
 function updateLangUI(){
   const F = LANGS[state.from], T = LANGS[state.to];
   $('fromName').textContent = F.native;
@@ -921,7 +889,6 @@ function pillPop(){
   });
 }
 
-/* ══════════ ОБМЕН ЯЗЫКОВ ══════════ */
 let rot = 0;
 $('swapBtn').addEventListener('click', ()=>{
   buzz(15);
@@ -942,7 +909,6 @@ $('swapBtn').addEventListener('click', ()=>{
   retranslateAll();
 });
 
-/* ══════════ ПАНЕЛЬ ВЫБОРА ЯЗЫКА ПЕРЕВОДА ══════════ */
 let sheetWhich = 'from';
 function openSheet(which){
   blurActive();
@@ -994,7 +960,6 @@ function selectLang(code){
   }
 }
 
-/* ══════════ ПЕРЕВОД ══════════ */
 async function requestTranslation(text, fromCode, toCode){
   fromCode = fromCode || state.from;
   toCode = toCode || state.to;
@@ -1052,7 +1017,6 @@ async function doTranslate(text, panel){
   }
 }
 
-/* ══════════ ТЕКСТОВЫЙ ВВОД ══════════ */
 function autoGrow(el){
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 260) + 'px';
@@ -1078,7 +1042,6 @@ $('clearBtn').addEventListener('click', ()=>{
   state.last.text = null;
   $('srcInput').focus();
 });
-/* вставка из буфера — ТОЛЬКО по нажатию (жест), без автозапросов */
 $('pasteBtn').addEventListener('click', async ()=>{
   buzz(10);
   try {
@@ -1089,13 +1052,12 @@ $('pasteBtn').addEventListener('click', async ()=>{
       doTranslate(txt.trim(), 'text');
       $('srcInput').focus();
     }
-  } catch(e){ /* нет доступа к буферу — пользователь вставит вручную */ }
+  } catch(e){ }
 });
 
-/* ══════════ ОЗВУЧИВАНИЕ: переключатель (повторное нажатие останавливает) ══════════ */
 let speakSeq = 0;
 let currentUtterance = null;
-let currentSpeak = null; // активная сессия озвучки: {id, btn, hl, onDone, closed, started, watchdog, hardStop}
+let currentSpeak = null;
 if ('speechSynthesis' in window){
   speechSynthesis.getVoices();
 }
@@ -1134,7 +1096,6 @@ function endSpeak(s, callOnDone){
   if (currentSpeak === s) currentSpeak = null;
   if (callOnDone && s.onDone) s.onDone();
 }
-/* публичная остановка: гасит звук и корректно завершает сессию (в т.ч. возвращает микрофон в диалоге) */
 function stopSpeaking(){
   if (!currentSpeak || currentSpeak.closed) return;
   const s = currentSpeak;
@@ -1143,12 +1104,10 @@ function stopSpeaking(){
 }
 function speakEntry(txt, lk, opts = {}){
   if (!('speechSynthesis' in window)){ if (opts.onDone) opts.onDone(); return; }
-  /* toggle: повторное нажатие на ту же кнопку останавливает воспроизведение */
   if (opts.btn && currentSpeak && !currentSpeak.closed && currentSpeak.btn === opts.btn){
     stopSpeaking();
     return;
   }
-  /* если играет другая фраза — прервать её (без её onDone, чтобы не конфликтовать управлением микрофоном) */
   if (currentSpeak && !currentSpeak.closed){
     try{ speechSynthesis.cancel(); }catch(e){}
     endSpeak(currentSpeak, false);
@@ -1165,14 +1124,12 @@ function speakEntry(txt, lk, opts = {}){
   u.onstart = ()=>{ s.started = true; };
   u.onend   = ()=>{ if (!s.closed) endSpeak(s, true); };
   u.onerror = ()=>{ if (!s.closed) endSpeak(s, true); };
-  /* если движок не стартовал — повтор с голосом по умолчанию */
   s.watchdog = setTimeout(()=>{
     if (!s.started && !s.closed){
       u.voice = null;
       try{ speechSynthesis.speak(u); }catch(e){ endSpeak(s, true); }
     }
   }, 900);
-  /* аварийный выход: микрофон не должен остаться на паузе навсегда */
   s.hardStop = setTimeout(()=>{
     if (!s.closed){ try{ speechSynthesis.cancel(); }catch(e){} endSpeak(s, true); }
   }, 25000);
@@ -1183,7 +1140,6 @@ function speakEntry(txt, lk, opts = {}){
 $('speakDst').addEventListener('click', e => { const x = state.last.text;  if (x) speakEntry(x.txt, x.lk, { btn: e.currentTarget }); });
 $('pSpeak').addEventListener('click',   e => { const x = state.last.photo; if (x) speakEntry(x.txt, x.lk, { btn: e.currentTarget }); });
 
-/* ══════════ КОПИРОВАНИЕ ══════════ */
 async function copyText(text, btn){
   if (!text) return;
   buzz(12);
@@ -1199,8 +1155,8 @@ async function copyText(text, btn){
 $('copyDst').addEventListener('click', e => copyText(state.last.text?.txt,  e.currentTarget));
 $('pCopy').addEventListener('click',   e => copyText(state.last.photo?.txt, e.currentTarget));
 $('copyOcr').addEventListener('click', e => copyText($('ocrText').value,    e.currentTarget));
-
-/* ══════════ РЕЧЬ: ДИАЛОГ (в локальном режиме — по одной фразе) ══════════ */
+// ===== ЧАСТЬ 3/4: КОНЕЦ =====
+// ===== ЧАСТЬ 4/4: НАЧАЛО =====
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, listening = false, dictMode = false, dictBase = '';
 let voiceSession = false, restartT = null, phraseCount = 0;
@@ -1263,7 +1219,6 @@ async function addVoiceEntry(src){
       btn: spBtn, hl: div,
       onDone: ()=>{
         speakingPause = false;
-        /* в локальном режиме НЕ перезапускаем автоматически — иначе цикл запросов */
         if (LOCAL_FILE){
           if (voiceSession) endSession();
           return;
@@ -1283,6 +1238,8 @@ async function addVoiceEntry(src){
 
 $('feedClear').addEventListener('click', ()=>{
   buzz(10);
+  $('liveText').classList.remove('interim');
+  $('liveText').innerHTML = `<span class="placeholder">${t('phLive')}</span>`;
   $('voiceFeed').innerHTML = '';
   const p = document.createElement('p');
   p.className = 'feed-empty'; p.id = 'feedEmpty';
@@ -1337,7 +1294,6 @@ if (!SR){
   rec.onend = ()=>{
     listening = false;
     if (dictMode){ dictMode = false; dictBase = ''; $('dictBtn').classList.remove('rec'); }
-    /* автоперезапуск ТОЛЬКО в безопасном контексте (https/localhost) */
     if (!LOCAL_FILE && voiceSession && !speakingPause){
       clearTimeout(restartT);
       restartT = setTimeout(()=>{
@@ -1358,12 +1314,11 @@ if (!SR){
   };
   startSession = function(){
     unlockSpeech();
-    /* если с другой вкладки что-то озвучивалось — аккуратно сбросить подсветку */
     if (currentSpeak && !currentSpeak.closed) endSpeak(currentSpeak, false);
     if ('speechSynthesis' in window) speechSynthesis.cancel();
     speakingPause = false;
     voiceSession = true;
-    rec.continuous = !LOCAL_FILE; /* локально — одна фраза за нажатие */
+    rec.continuous = !LOCAL_FILE;
     rec.lang = LANGS[state.from].speech;
     setSessionUI(true);
     try { rec.start(); } catch(e){}
@@ -1372,7 +1327,6 @@ if (!SR){
     voiceSession = false;
     clearTimeout(restartT);
     if ('speechSynthesis' in window) speechSynthesis.cancel();
-    /* остановить озвучку БЕЗ её onDone, чтобы микрофон не попытался возобновиться после выхода */
     if (currentSpeak && !currentSpeak.closed) endSpeak(currentSpeak, false);
     speakingPause = false;
     setSessionUI(false);
@@ -1391,7 +1345,6 @@ if (!SR){
   });
 }
 
-/* ══════════ ФОТО: OCR + ПЕРЕВОД (старое фото очищается) ══════════ */
 let lastObjUrl = null;
 function clearPhotoResults(){
   $('ocrText').value = '';
@@ -1463,7 +1416,6 @@ $('ocrText').addEventListener('input', e=>{
   ocrTid = setTimeout(()=> doTranslate(v, 'photo'), 700);
 });
 
-/* ══════════ НАСТРОЙКИ ══════════ */
 function applyTheme(){
   document.documentElement.dataset.theme = settings.theme;
   $('segTheme').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === settings.theme));
@@ -1571,7 +1523,6 @@ $('gearBtn').addEventListener('click', ()=>{ buzz(8); openSettings(); });
 $('setClose').addEventListener('click', closeSettings);
 $('setBackdrop').addEventListener('click', closeSettings);
 
-/* ══════════ ПРИМЕНЕНИЕ ЯЗЫКА ИНТЕРФЕЙСА ══════════ */
 function applyI18n(){
   document.documentElement.lang = settings.ui;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
@@ -1591,7 +1542,6 @@ function applyI18n(){
   renderHistory();
 }
 
-/* ══════════ ПЕРЕВОД ВЫДЕЛЕННОГО ТЕКСТА — ТЕЛЕФОН И КОМПЬЮТЕР ══════════ */
 (function(){
   const selBtn = $('selBtn'), selPop = $('selPop');
   let selRes = null, selLk = 'en', selT = null;
@@ -1663,7 +1613,6 @@ function applyI18n(){
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hideSelAll(); });
 })();
 
-/* ══════════ ИСТОРИЯ ══════════ */
 const HKEY = 'tolmach_history';
 (function migrate(){
   try {
@@ -1714,7 +1663,6 @@ $('histClear').addEventListener('click', ()=>{
   buzz(10);
 });
 
-/* ══════════ СТАРТ ══════════ */
 applyTheme();
 applyFont();
 buildVoiceList();
